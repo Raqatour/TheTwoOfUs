@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 87ba3d2366dfed144b2f9becf50a30f9
+timeCreated: 1508775953
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 180
+  forceTextureCase: -1
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Sunshine In My Soul
+  fontNames:
+  - Sunshine In My Soul
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

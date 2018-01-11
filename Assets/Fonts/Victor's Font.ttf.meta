@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 443029925d557cb46a929ab505802830
+timeCreated: 1508776290
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 180
+  forceTextureCase: -1
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Victor Handwriting
+  fontNames:
+  - Victor Handwriting
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
