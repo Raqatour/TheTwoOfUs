@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Flusk;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -68,6 +69,9 @@ public class Creator : MonoBehaviour
 
 	private Light attachedLight;
 
+	[SerializeField, HideInInspector]
+	private OrbitBasket orbits = new OrbitBasket(10);
+
 	private void Awake()
 	{
 		attachedLight = GetComponent<Light>();
@@ -96,11 +100,14 @@ public class Creator : MonoBehaviour
 		SoulMate = soulMate.GetComponent<Creator>();
 		
 		//Generates soul
+		orbits = new OrbitBasket(1);
 		for(int i = 0; i < particleCap; i++)
 		{
 			GameObject childObject = Instantiate(particleTemplate, transform.position,
 				Quaternion.Euler(new Vector3(Random.Range(0, 360), Random.Range(0, 360), 0))) as GameObject;
-			childObject.GetComponent<Orbit>().Init(this, attachedLight);
+			Orbit orbit = childObject.GetComponent<Orbit>();
+			orbit.Init(this, attachedLight);
+			orbits.Add(orbit);
 			childObject.transform.SetParent(transform);
 		}
 
@@ -109,211 +116,233 @@ public class Creator : MonoBehaviour
 
 	void Update()
 	{
-		if(gamePad1.X.Pressed || gamePad2.X.Pressed)
-		{
-			SceneManager.LoadScene(0);	
-		}
-
-		if(timerSqueeze0 >= squeezeTime)
-		{
-			gamePad1.StopVibration();
-		}
-		else if(timerSqueeze0 >= 4*squeezeTime/5 && timerSqueeze0 < squeezeTime)
-		{
-			gamePad1.SetVibration(90, 90);
-		}
-		else if(timerSqueeze0 >= 3*squeezeTime/5 && timerSqueeze0 < 4*squeezeTime/5)
-		{
-			gamePad1.SetVibration(60, 60);
-		}
-		else if(timerSqueeze0 >= 2*squeezeTime/5 && timerSqueeze0 < 3*squeezeTime/5)
-		{
-			gamePad1.SetVibration(35, 35);
-		}
-		else if(timerSqueeze0 >= 1*squeezeTime/5 && timerSqueeze0 < 2*squeezeTime/5)
-		{
-			gamePad1.SetVibration(15, 15);
-		}
-		else if(timerSqueeze0 > 0 && timerSqueeze0 < squeezeTime/5)
-		{
-			gamePad1.SetVibration(5, 5);
-		}
-
-		if(gamePad1.RightTrigger == 0 && timerSqueeze0 > 0)
-		{
-			timerSqueeze0 = 5;
-		}
-
-		if(gamePad2.RightTrigger == 0 && timerSqueeze1 > 0)
-		{
-			timerSqueeze1 = 5;
-		}
-
-		if(timerSqueeze1 >= squeezeTime)
-		{
-			gamePad2.StopVibration();
-		}
-		else if(timerSqueeze1 >= 4*squeezeTime/5 && timerSqueeze1 < squeezeTime)
-		{
-			gamePad2.SetVibration(90, 90);
-		}
-		else if(timerSqueeze1 >= 3*squeezeTime/5 && timerSqueeze1 < 4*squeezeTime/5)
-		{
-			gamePad2.SetVibration(60, 60);
-		}
-		else if(timerSqueeze1 >= 2*squeezeTime/5 && timerSqueeze1 < 3*squeezeTime/5)
-		{
-			gamePad2.SetVibration(35, 35);
-		}
-		else if(timerSqueeze1 >= 1*squeezeTime/5 && timerSqueeze1 < 2*squeezeTime/5)
-		{
-			gamePad2.SetVibration(15, 15);
-		}
-		else if(timerSqueeze1 > 0 && timerSqueeze1 < squeezeTime/5)
-		{
-			gamePad2.SetVibration(5, 5);
-		}
-
-		if(gamePad1.RightTrigger == 0)
-		{
-			gamePad1.StopVibration();
-		}
-
-		if(gamePad2.RightTrigger == 0)
-		{
-			gamePad2.StopVibration();
-		}
-		
-		if(gamePad1.A.Pressed || gamePad2.A.Pressed)
-		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		}
-
+		// Update orbits
+		orbits.UpdateNext();
+		GamePadCheck();
 		//Movement and collider size change
-		if(!isEnded)
+		Movement();
+	}
+
+	private void Movement()
+	{
+		if (!isEnded)
 		{
-			if(this.gameObject.tag == "Orga")
-			{
-				if(ammo == 1)
-				{
-					SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-					myCollider.radius = 10;
-					//thisCollider.radius = 10;
-					//transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-				}
-				else if(ammo == 6)
-				{
-					SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-					myCollider.radius = 25;
-					//thisCollider.radius = 25;
-					//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-				}
-				else if(ammo == 3)
-				{
-					SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-					myCollider.radius = 20;
-					//thisCollider.radius = 20;
-					//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-				}
+			OrgaMovement();
 
-				//rb.MovePosition(transform.position + transform.up * Time.deltaTime * speedy);
-				rb.velocity = new Vector3(gamePad1.LeftStick.X * speedy, gamePad1.LeftStick.Y * speedy, 0);
-
-				//Collider size change
-				if(Input.GetKey(KeyCode.M) || gamePad1.RightTrigger == 1 && gamePad1.B.Held)
-				{
-					timerSqueeze0 += Time.deltaTime;
-					if(isOrgaBig && timerSqueeze0 < squeezeTime)
-					{
-						soulMate.GetComponent<Creator>().ammo = 1;
-						ammo = 6;
-						if(!aud.isPlaying)
-						{
-							aud.PlayOneShot(exhale, 1.0f);
-						}
-					}
-				}
-
-				if(Input.GetKeyUp(KeyCode.M) || gamePad1.RightTrigger == 0 || timerSqueeze0 >= squeezeTime)
-				{
-					soulMate.GetComponent<Creator>().ammo = 3;
-					ammo = 3;
-				}
-
-				if(timerSqueeze0 >= squeezeTime && orgaInhaled == true)
-				{
-					aud.Stop();
-					if(!aud.isPlaying)
-					{
-						aud.PlayOneShot(inhale, 1.0f);
-					}
-					orgaInhaled = false;
-				}
-			}
-
-			if(this.gameObject.tag == "Mecha")
-			{
-				if(ammo == 1)
-				{
-					SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-					myCollider.radius = 10;
-					//thisCollider.radius = 10;
-					//transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-				}
-				else if(ammo == 6)
-				{
-					SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-					myCollider.radius = 25;
-					//thisCollider.radius = 25;
-					//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-				}
-				else if(ammo == 3)
-				{
-					SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-					myCollider.radius = 20;
-					//thisCollider.radius = 20;
-					//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-				}
-
-				rb.velocity = new Vector3(gamePad2.LeftStick.X * -speedy, gamePad2.LeftStick.Y * -speedy, 0);
-
-				if(Input.GetKey(KeyCode.V) || gamePad2.RightTrigger == 1 && gamePad2.B.Held)
-				{
-					timerSqueeze1 += Time.deltaTime;
-					if(isMechaBig && timerSqueeze1 < squeezeTime)
-					{
-						soulMate.GetComponent<Creator>().ammo = 1;
-						ammo = 6;
-						if(!aud.isPlaying)
-						{
-							aud.PlayOneShot(exhale, 1.0f);
-						}
-					}
-				}
-
-				if(Input.GetKeyUp(KeyCode.V) || gamePad2.RightTrigger == 0 || timerSqueeze1 >= squeezeTime)
-				{
-					soulMate.GetComponent<Creator>().ammo = 3;
-					ammo = 3;
-				}
-
-				if(timerSqueeze1 >= squeezeTime && mechaInhaled == true)
-				{
-					aud.Stop();
-					if(!aud.isPlaying)
-					{
-						aud.PlayOneShot(inhale, 1.0f);
-					}
-					mechaInhaled = false;
-				}
-			}
+			MechaMovement();
 		}
-
-		if(isEnded)
+		else
 		{
 			isSpinning = true;
 			soulMate.transform.localPosition = new Vector3(-20, 0, 0);
 			transform.localPosition = new Vector3(20, 0, 0);
+		}
+	}
+
+	private void MechaMovement()
+	{
+		if (this.gameObject.tag == "Mecha")
+		{
+			if (ammo == 1)
+			{
+				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
+				myCollider.radius = 10;
+				//thisCollider.radius = 10;
+				//transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+			}
+			else if (ammo == 6)
+			{
+				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
+				myCollider.radius = 25;
+				//thisCollider.radius = 25;
+				//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+			}
+			else if (ammo == 3)
+			{
+				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
+				myCollider.radius = 20;
+				//thisCollider.radius = 20;
+				//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+			}
+
+			rb.velocity = new Vector3(gamePad2.LeftStick.X * -speedy, gamePad2.LeftStick.Y * -speedy, 0);
+
+			if (Input.GetKey(KeyCode.V) || gamePad2.RightTrigger == 1 && gamePad2.B.Held)
+			{
+				timerSqueeze1 += Time.deltaTime;
+				if (isMechaBig && timerSqueeze1 < squeezeTime)
+				{
+					soulMate.GetComponent<Creator>().ammo = 1;
+					ammo = 6;
+					if (!aud.isPlaying)
+					{
+						aud.PlayOneShot(exhale, 1.0f);
+					}
+				}
+			}
+
+			if (Input.GetKeyUp(KeyCode.V) || gamePad2.RightTrigger == 0 || timerSqueeze1 >= squeezeTime)
+			{
+				soulMate.GetComponent<Creator>().ammo = 3;
+				ammo = 3;
+			}
+
+			if (timerSqueeze1 >= squeezeTime && mechaInhaled == true)
+			{
+				aud.Stop();
+				if (!aud.isPlaying)
+				{
+					aud.PlayOneShot(inhale, 1.0f);
+				}
+
+				mechaInhaled = false;
+			}
+		}
+	}
+
+	private void OrgaMovement()
+	{
+		if (this.gameObject.tag == "Orga")
+		{
+			if (ammo == 1)
+			{
+				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
+				myCollider.radius = 10;
+				//thisCollider.radius = 10;
+				//transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+			}
+			else if (ammo == 6)
+			{
+				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
+				myCollider.radius = 25;
+				//thisCollider.radius = 25;
+				//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+			}
+			else if (ammo == 3)
+			{
+				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
+				myCollider.radius = 20;
+				//thisCollider.radius = 20;
+				//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+			}
+
+			//rb.MovePosition(transform.position + transform.up * Time.deltaTime * speedy);
+			rb.velocity = new Vector3(gamePad1.LeftStick.X * speedy, gamePad1.LeftStick.Y * speedy, 0);
+
+			//Collider size change
+			if (Input.GetKey(KeyCode.M) || gamePad1.RightTrigger == 1 && gamePad1.B.Held)
+			{
+				timerSqueeze0 += Time.deltaTime;
+				if (isOrgaBig && timerSqueeze0 < squeezeTime)
+				{
+					soulMate.GetComponent<Creator>().ammo = 1;
+					ammo = 6;
+					if (!aud.isPlaying)
+					{
+						aud.PlayOneShot(exhale, 1.0f);
+					}
+				}
+			}
+
+			if (Input.GetKeyUp(KeyCode.M) || gamePad1.RightTrigger == 0 || timerSqueeze0 >= squeezeTime)
+			{
+				soulMate.GetComponent<Creator>().ammo = 3;
+				ammo = 3;
+			}
+
+			if (timerSqueeze0 >= squeezeTime && orgaInhaled == true)
+			{
+				aud.Stop();
+				if (!aud.isPlaying)
+				{
+					aud.PlayOneShot(inhale, 1.0f);
+				}
+
+				orgaInhaled = false;
+			}
+		}
+	}
+
+	private void GamePadCheck()
+	{
+		if (gamePad1.X.Pressed || gamePad2.X.Pressed)
+		{
+			SceneManager.LoadScene(0);
+		}
+
+		if (timerSqueeze0 >= squeezeTime)
+		{
+			gamePad1.StopVibration();
+		}
+		else if (timerSqueeze0 >= 4 * squeezeTime / 5 && timerSqueeze0 < squeezeTime)
+		{
+			gamePad1.SetVibration(90, 90);
+		}
+		else if (timerSqueeze0 >= 3 * squeezeTime / 5 && timerSqueeze0 < 4 * squeezeTime / 5)
+		{
+			gamePad1.SetVibration(60, 60);
+		}
+		else if (timerSqueeze0 >= 2 * squeezeTime / 5 && timerSqueeze0 < 3 * squeezeTime / 5)
+		{
+			gamePad1.SetVibration(35, 35);
+		}
+		else if (timerSqueeze0 >= 1 * squeezeTime / 5 && timerSqueeze0 < 2 * squeezeTime / 5)
+		{
+			gamePad1.SetVibration(15, 15);
+		}
+		else if (timerSqueeze0 > 0 && timerSqueeze0 < squeezeTime / 5)
+		{
+			gamePad1.SetVibration(5, 5);
+		}
+
+		if (gamePad1.RightTrigger == 0 && timerSqueeze0 > 0)
+		{
+			timerSqueeze0 = 5;
+		}
+
+		if (gamePad2.RightTrigger == 0 && timerSqueeze1 > 0)
+		{
+			timerSqueeze1 = 5;
+		}
+
+		if (timerSqueeze1 >= squeezeTime)
+		{
+			gamePad2.StopVibration();
+		}
+		else if (timerSqueeze1 >= 4 * squeezeTime / 5 && timerSqueeze1 < squeezeTime)
+		{
+			gamePad2.SetVibration(90, 90);
+		}
+		else if (timerSqueeze1 >= 3 * squeezeTime / 5 && timerSqueeze1 < 4 * squeezeTime / 5)
+		{
+			gamePad2.SetVibration(60, 60);
+		}
+		else if (timerSqueeze1 >= 2 * squeezeTime / 5 && timerSqueeze1 < 3 * squeezeTime / 5)
+		{
+			gamePad2.SetVibration(35, 35);
+		}
+		else if (timerSqueeze1 >= 1 * squeezeTime / 5 && timerSqueeze1 < 2 * squeezeTime / 5)
+		{
+			gamePad2.SetVibration(15, 15);
+		}
+		else if (timerSqueeze1 > 0 && timerSqueeze1 < squeezeTime / 5)
+		{
+			gamePad2.SetVibration(5, 5);
+		}
+
+		if (gamePad1.RightTrigger == 0)
+		{
+			gamePad1.StopVibration();
+		}
+
+		if (gamePad2.RightTrigger == 0)
+		{
+			gamePad2.StopVibration();
+		}
+
+		if (gamePad1.A.Pressed || gamePad2.A.Pressed)
+		{
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		}
 	}
 

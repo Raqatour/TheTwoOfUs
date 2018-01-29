@@ -81,7 +81,7 @@ public class Orbit : MonoBehaviour
 		}
 	}
 
-	void Update ()
+	public void UpdateOrbit ()
 	{
 		RenderingStates();
 		SetData();

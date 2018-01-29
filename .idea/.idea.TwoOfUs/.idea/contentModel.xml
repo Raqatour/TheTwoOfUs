@@ -56,6 +56,10 @@
           <e p="Creator.cs" t="Include" />
           <e p="EndScene.cs" t="Include" />
           <e p="EnemyBehaviour.cs" t="Include" />
+          <e p="Flusk" t="Include">
+            <e p="BasketList.cs" t="Include" />
+            <e p="OrbitBasket.cs" t="Include" />
+          </e>
           <e p="Gazer.cs" t="Include" />
           <e p="Heart.cs" t="Include" />
           <e p="LaunchGamePadController.cs" t="Include" />
