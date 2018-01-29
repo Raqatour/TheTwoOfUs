@@ -13,6 +13,11 @@ public class Creator : MonoBehaviour
 	public GameObject particleTemplate;
 	public int gender;
 	public GameObject soulMate;
+	
+	// The Creator of the soul mate
+	public Creator SoulMate { get; private set; }
+	
+	
 	public float speed;
 	public Rigidbody rb;
 	public float radius;
@@ -69,10 +74,7 @@ public class Creator : MonoBehaviour
 		aud = GetComponent<AudioSource>();
 		rb = GetComponent<Rigidbody>();
 
-		//SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-		//myCollider.radius = 20;
 
-		//Assigns gender, ensuring the other origin object has the opposite
 		if(this.gameObject.tag == "Orga")
 		{
 			soulMate = GameObject.FindGameObjectWithTag("Mecha");
@@ -84,11 +86,13 @@ public class Creator : MonoBehaviour
 			gender = 1;
 		}
 
+		SoulMate = soulMate.GetComponent<Creator>();
+		
 		//Generates soul
 		for(int i = 0; i < particleCap; i++)
 		{
 			GameObject childObject = Instantiate(particleTemplate, transform.position, Quaternion.Euler(new Vector3(Random.Range(0, 360), Random.Range(0, 360), 0))) as GameObject;
-			childObject.transform.parent = this.transform;
+			childObject.transform.SetParent(transform);
 		}
 
 		heart = null;
