@@ -66,6 +66,13 @@ public class Creator : MonoBehaviour
 	public bool orgaInhaled = true;
 	public bool mechaInhaled = true;
 
+	private Light attachedLight;
+
+	private void Awake()
+	{
+		attachedLight = GetComponent<Light>();
+	}
+
 	void Start()
 	{
 		gamePad1 = GamePadController.GamePadOne;
@@ -91,7 +98,9 @@ public class Creator : MonoBehaviour
 		//Generates soul
 		for(int i = 0; i < particleCap; i++)
 		{
-			GameObject childObject = Instantiate(particleTemplate, transform.position, Quaternion.Euler(new Vector3(Random.Range(0, 360), Random.Range(0, 360), 0))) as GameObject;
+			GameObject childObject = Instantiate(particleTemplate, transform.position,
+				Quaternion.Euler(new Vector3(Random.Range(0, 360), Random.Range(0, 360), 0))) as GameObject;
+			childObject.GetComponent<Orbit>().Init(this, attachedLight);
 			childObject.transform.SetParent(transform);
 		}
 

@@ -30,7 +30,6 @@ public class Orbit : MonoBehaviour
 	private Vector3 threeWay;
 	private int radical; //Determines whether a particle will expand out during a respective squeeze
 	private int subGender;
-	private GameObject uBuntu;
 	private int tempGender;
 	private float varRadius = 5.0f;
 
@@ -43,17 +42,14 @@ public class Orbit : MonoBehaviour
 	protected TrailRenderer trailRenderer;
 	public Light ParentLight { get; set; }
 
-	protected virtual void Awake()
+	public void Init(Creator creator, Light light)
 	{
-		Creator = GetComponentInParent<Creator>();
-		trailRenderer = GetComponent<TrailRenderer>();
-		ParentLight = GetComponentInParent<Light>();
+		Creator = creator;
+		ParentLight = light;
 	}
 
 	void Start()
 	{
-		uBuntu = transform.parent.gameObject;
-
 		//Each particle has the gender of its parent
 		if (Creator == null)
 		{
