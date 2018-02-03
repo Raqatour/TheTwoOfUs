@@ -44,7 +44,6 @@ public class Creator : MonoBehaviour
 	private float verticalZero;
 	private Vector3 movementZero;
 	private Vector3 wallDetection;
-	private int setExternal = 0;
 	private int countParticles = 0;
 	private bool canShoot = true;
 	private int track = 0;
