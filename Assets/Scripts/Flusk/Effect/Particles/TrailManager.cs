@@ -7,11 +7,20 @@ namespace Flusk.Effect.Particles
     {
         private List<ParticleSystem> trails;
 
+        private Vector3 originalScale;
+        
+        public void SetScale(float scale)
+        {
+            transform.localScale = originalScale * scale;
+        }
+        
         protected virtual void Awake()
         {
             int count = transform.childCount;
             trails = new List<ParticleSystem>(count);
             GetComponentsInChildren(trails);
+
+            originalScale = transform.localScale;
         }
     }
 }

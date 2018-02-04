@@ -21,6 +21,9 @@ namespace Flusk.Effect
         protected TrailManager trailFxManager;
 
         [SerializeField]
+        protected TrailManager sparkleTrailFxManager;
+
+        [SerializeField]
         protected AnimationCurve shrinkCurve, growCurve;
 
         protected Creator parentCreator;

@@ -44,8 +44,7 @@ namespace Flusk.Effect
         private void ShrinkUpdate(float currentTime)
         {
             float current = shrinkCurve.Evaluate(currentTime);
-            sparkleManager.SetSparkleScale(current);
-            innerSphereManager.SetScale(current);
+            SetScale(current);
         }
 
         private void ShrinkComplete()
@@ -64,8 +63,14 @@ namespace Flusk.Effect
         private void GrowUpdate(float currentTime)
         {
             float current = growCurve.Evaluate(currentTime);
+            SetScale(current);
+        }
+
+        private void SetScale(float current)
+        {
             sparkleManager.SetSparkleScale(current);
             innerSphereManager.SetScale(current);
+            sparkleTrailFxManager.SetScale(current);
         }
 
         private void GrowComplete()
