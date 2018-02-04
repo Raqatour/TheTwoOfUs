@@ -2,6 +2,7 @@
 	Attach yto "Origin" game object.
 */
 
+using System;
 using Flusk;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,7 +31,25 @@ public class Creator : MonoBehaviour
 	public bool isOrgaBig;
 	public bool isMechaGlowing = true;
 	public bool isMechaBig;
-	public bool isIgnited;
+
+	private bool isIgnited;
+
+	public event Action<bool> IgnitedChanged;
+	public bool IsIgnited
+	{
+		get { return isIgnited; }
+		set
+		{
+			if (value != isIgnited)
+			{
+				isIgnited = value;
+				if (IgnitedChanged != null)
+				{
+					IgnitedChanged(value);
+				}
+			}
+		}
+	}
 
 	private float horizontalZero;
 	private float verticalZero;

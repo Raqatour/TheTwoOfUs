@@ -15,14 +15,14 @@ public class Reignite : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		if(other.GetComponent<Collider>().tag == "Orga")
+		if(other.GetComponent<Collider>().CompareTag("Orga"))
 		{
 			isButtonUp = true;
 			other.GetComponent<Creator>().soulMate.GetComponent<Creator>().timerSqueeze1 = 5;
 			other.GetComponent<Creator>().isOrgaGlowing = true;
 			other.GetComponent<Creator>().soulMate.GetComponent<Creator>().isMechaGlowing = true;
-			other.GetComponent<Creator>().isIgnited = true;
-			other.GetComponent<Creator>().soulMate.GetComponent<Creator>().isIgnited = true;
+			other.GetComponent<Creator>().IsIgnited = true;
+			other.GetComponent<Creator>().soulMate.GetComponent<Creator>().IsIgnited = true;
 			if(!aud.isPlaying)
 			{
 				aud.PlayOneShot(intake, 1.0f);
@@ -35,8 +35,8 @@ public class Reignite : MonoBehaviour
 			other.GetComponent<Creator>().soulMate.GetComponent<Creator>().timerSqueeze0 = 5;
 			other.GetComponent<Creator>().isMechaGlowing = true;
 			other.GetComponent<Creator>().soulMate.GetComponent<Creator>().isOrgaGlowing = true;
-			other.GetComponent<Creator>().isIgnited = true;
-			other.GetComponent<Creator>().soulMate.GetComponent<Creator>().isIgnited = true;
+			other.GetComponent<Creator>().IsIgnited = true;
+			other.GetComponent<Creator>().soulMate.GetComponent<Creator>().IsIgnited = true;
 			if(!aud.isPlaying)
 			{
 				aud.PlayOneShot(intake, 1.0f);

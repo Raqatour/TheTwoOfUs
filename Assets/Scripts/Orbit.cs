@@ -89,7 +89,7 @@ public class Orbit : MonoBehaviour
 
 	private void Ignited()
 	{
-		if (!Creator.isIgnited)
+		if (!Creator.IsIgnited)
 		{
 			return;
 		}
@@ -110,12 +110,12 @@ public class Orbit : MonoBehaviour
 			Creator.isMechaGlowing = true;
 		}
 
-		var visiblyActive = Creator.isOrgaGlowing  &&	Creator.isMechaGlowing  && Creator.isIgnited;
+		var visiblyActive = Creator.isOrgaGlowing  &&	Creator.isMechaGlowing  && Creator.IsIgnited;
 		if (!visiblyActive)
 		{
 			return;
 		}
-		Creator.isIgnited = false;
+		Creator.IsIgnited = false;
 		Creator.isMechaGlowing = true;
 		Creator.isOrgaGlowing = true;
 	}
@@ -246,7 +246,7 @@ public class Orbit : MonoBehaviour
 	{
 		if (!Input.GetKey(KeyCode.V) && !Input.GetKey(KeyCode.M) &&
 		    Creator.gamePad1.RightTrigger == 0 &&
-		    Creator.gamePad2.RightTrigger == 0 || Creator.isIgnited)
+		    Creator.gamePad2.RightTrigger == 0 || Creator.IsIgnited)
 		{
 			radius = varRadius * orbitDistance; //clipsize;
 			transform.Translate(Vector3.forward * Time.deltaTime * speed);
@@ -316,7 +316,7 @@ public class Orbit : MonoBehaviour
 			//Orga
 			//Spinning and orbiting
 			if (Input.GetKey(KeyCode.M) || Creator.gamePad1.RightTrigger == 1 &&
-			    Creator.gamePad1.B.Held && !Creator.isIgnited)
+			    Creator.gamePad1.B.Held && !Creator.IsIgnited)
 			{
 				if (radical == 1 && Creator.timerSqueeze0 <
 				    Creator.squeezeTime)
@@ -379,7 +379,7 @@ public class Orbit : MonoBehaviour
 				}
 			}
 			else if (Input.GetKey(KeyCode.V) || Creator.gamePad2.RightTrigger == 1 &&
-			         Creator.gamePad2.B.Held && !Creator.isIgnited)
+			         Creator.gamePad2.B.Held && !Creator.IsIgnited)
 			{
 				if (Creator.SoulMate.isMechaGlowing &&
 				    Creator.SoulMate.timerSqueeze1 <
@@ -449,7 +449,7 @@ public class Orbit : MonoBehaviour
 		{
 			//Spinning and orbiting
 			if (Input.GetKey(KeyCode.V) || Creator.gamePad2.RightTrigger == 1 &&
-			    Creator.gamePad2.B.Held && !Creator.isIgnited)
+			    Creator.gamePad2.B.Held && !Creator.IsIgnited)
 			{
 				if (radical == 1 && Creator.timerSqueeze1 <
 				    Creator.squeezeTime)
@@ -509,7 +509,7 @@ public class Orbit : MonoBehaviour
 				}
 			}
 			else if (Input.GetKey(KeyCode.M) || Creator.gamePad1.RightTrigger == 1 &&
-			         Creator.gamePad1.B.Held && !Creator.isIgnited)
+			         Creator.gamePad1.B.Held && !Creator.IsIgnited)
 			{
 				if (Creator.SoulMate.isOrgaGlowing &&
 				    Creator.SoulMate.timerSqueeze0 <
@@ -619,7 +619,7 @@ public class Orbit : MonoBehaviour
 			ParentLight.color = new Color32(0x69, 0x4F, 0xAC, 0x80);
 		}
 
-		if (Creator.isOrgaBig && !Creator.isIgnited)
+		if (Creator.isOrgaBig && !Creator.IsIgnited)
 		{
 			trailRenderer.material = GrayMat;
 			ParentLight.range = 75 / Creator.timerSqueeze0;
@@ -627,7 +627,7 @@ public class Orbit : MonoBehaviour
 				new Color32(0x4B, 0x00, 0x82, 0x80), Creator.timerSqueeze0 / 5);
 		}
 
-		if (Creator.isMechaBig && !Creator.isIgnited)
+		if (Creator.isMechaBig && !Creator.IsIgnited)
 		{
 			trailRenderer.material = GrayMat;
 			ParentLight.range = 75 / Creator.timerSqueeze1;
