@@ -81,9 +81,17 @@
               <e p="MathHelp.cs" t="Include" />
             </e>
             <e p="Effect" t="Include">
+              <e p="Editor" t="Include">
+                <e p="EffectControllerEditor.cs" t="Include" />
+                <e p="SparkleManagerEditor.cs" t="Include" />
+              </e>
               <e p="EffectController.cs" t="Include" />
               <e p="Particles" t="Include">
                 <e p="MainParticleSystem.cs" t="Include" />
+                <e p="NoSparkleParticles.cs" t="Include" />
+                <e p="PrimaryParticlesController.cs" t="Include" />
+                <e p="SparkleManager.cs" t="Include" />
+                <e p="SparkleParticles.cs" t="Include" />
                 <e p="SupportParticleSystem.cs" t="Include" />
                 <e p="TrailManager.cs" t="Include" />
                 <e p="TrailParticleSystem.cs" t="Include" />

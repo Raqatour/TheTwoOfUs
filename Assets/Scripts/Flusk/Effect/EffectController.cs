@@ -13,17 +13,15 @@ namespace Flusk.Effect
         protected OuterSphereManager outerSphereManager;
 
         [SerializeField]
-        protected MainParticleSystem mainPfx;
-
-        [SerializeField]
-        protected SupportParticleSystem supportPfx;
+        protected SparkleManager sparkleManager;
 
         [SerializeField]
         protected TrailManager trailFxManager;
 
-        protected virtual void Awake()
+        public void Sparkle(bool state)
         {
-            supportPfx.SetState(SupportParticleSystem.State.Pulsing);
+            sparkleManager.Sparkle(state);
+            innerSphereManager.gameObject.SetActive(state);
         }
     }
 }

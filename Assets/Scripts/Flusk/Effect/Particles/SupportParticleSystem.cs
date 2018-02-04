@@ -33,6 +33,7 @@ namespace Flusk.Effect.Particles
         protected virtual void Awake()
         {
             pulse = GetComponent<Pulse>();
+            SetState(State.Pulsing);
         }
     }
 }
