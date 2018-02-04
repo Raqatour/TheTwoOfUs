@@ -74,6 +74,9 @@ public class Creator : MonoBehaviour
 	public bool orgaInhaled = true;
 	public bool mechaInhaled = true;
 
+#if UNITY_EDITOR
+	public KeyCode forceIgnite;
+#endif
 
 	void Start()
 	{
@@ -104,6 +107,12 @@ public class Creator : MonoBehaviour
 		GamePadCheck();
 		//Movement and collider size change
 		Movement();
+#if UNITY_EDITOR
+		if (Input.GetKeyDown(forceIgnite))
+		{
+			IsIgnited = !IsIgnited;
+		}
+#endif
 	}
 
 	private void Movement()
