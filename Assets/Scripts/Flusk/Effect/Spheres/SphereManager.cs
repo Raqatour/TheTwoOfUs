@@ -13,5 +13,20 @@ namespace Flusk.Effect.Spheres
             spheres = new List<T>(count);
             GetComponentsInChildren(spheres); 
         }
+        
+        public void Deactivate()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void Activate()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
+        }
     }
 }

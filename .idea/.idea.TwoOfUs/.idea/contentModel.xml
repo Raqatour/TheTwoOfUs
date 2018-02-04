@@ -108,6 +108,7 @@
                 <e p="Sphere.cs" t="Include" />
                 <e p="SphereManager.cs" t="Include" />
               </e>
+              <e p="TimedEffectController.cs" t="Include" />
             </e>
             <e p="Extensions" t="Include">
               <e p="AnimationCurveExtensions.cs" t="Include" />

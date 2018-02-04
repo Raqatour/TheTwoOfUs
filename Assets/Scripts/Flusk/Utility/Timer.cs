@@ -5,6 +5,7 @@ namespace Flusk.Utility
     public class Timer
     {
         public Action Complete;
+        public Action<float> Update;
 
         private float time = 0;
         private float goal = 0;
@@ -23,6 +24,10 @@ namespace Flusk.Utility
         public void Tick (float deltaTime)
         {
             time += deltaTime;
+            if (Update != null)
+            {
+                Update(time);
+            }
             if ( time > goal )
             {
                 Fire();

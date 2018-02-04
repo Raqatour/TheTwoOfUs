@@ -8,9 +8,17 @@ namespace Flusk.Effect.Spheres
         [SerializeField]
         protected Range scaleSizes;
 
+        protected Vector3 orginialScale;
+
+        public void SetScale(float size)
+        {
+            transform.localScale = orginialScale * size;
+        }
+        
         protected override void Awake()
         {
             base.Awake();
+            orginialScale = transform.localScale;
             int count = spheres.Count;
             for (int i = 0; i < count; i++)
             {

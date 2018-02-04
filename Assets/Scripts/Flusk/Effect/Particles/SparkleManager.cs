@@ -6,19 +6,29 @@ namespace Flusk.Effect.Particles
     {
         [SerializeField]
         protected SparkleParticles sparkle;
+        public SparkleParticles Sparkle
+        {
+            get { return sparkle; }
+        }
 
         [SerializeField]
         protected NoSparkleParticles noSparkle;
-
-        public void Sparkle(bool sparkling)
+        public NoSparkleParticles NoSparkle
         {
-            sparkle.gameObject.SetActive(sparkling);
-            noSparkle.gameObject.SetActive(!sparkling);
+            get { return noSparkle; }
         }
 
-        protected virtual void Awake()
+        public void SetSparkleScale(float size)
         {
-            Sparkle(true);
+            sparkle.Activate();
+            sparkle.SetScale(size);
+            noSparkle.Activate();
+        }
+        
+        public void SetSparkle(bool sparkling)
+        {
+            sparkle.SetActive(sparkling);
+            noSparkle.SetActive(!sparkling);
         }
     }
 }

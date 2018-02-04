@@ -1,5 +1,7 @@
 ﻿using Flusk.Effect.Particles;
 using Flusk.Effect.Spheres;
+using Flusk.Extensions;
+using Flusk.Utility;
 using UnityEngine;
 
 namespace Flusk.Effect
@@ -18,12 +20,15 @@ namespace Flusk.Effect
         [SerializeField]
         protected TrailManager trailFxManager;
 
-        private Creator parentCreator;
+        [SerializeField]
+        protected AnimationCurve shrinkCurve, growCurve;
 
-        public void Sparkle(bool state)
+        protected Creator parentCreator;
+
+        public virtual void Sparkle(bool state)
         {
-            sparkleManager.Sparkle(state);
-            innerSphereManager.gameObject.SetActive(state);
+            sparkleManager.SetSparkle(state);
+            innerSphereManager.SetActive(state);
         }
 
         protected virtual void OnEnable()

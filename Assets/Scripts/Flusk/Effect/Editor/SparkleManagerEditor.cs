@@ -16,12 +16,12 @@ namespace Flusk.Effect.Editor
             
             if (GUILayout.Button("Activate Sparkle"))
             {
-                sparkle.Sparkle(true);
+                sparkle.SetSparkle(true);
             }
 
             if (GUILayout.Button("Deactivate Sparkle"))
             {
-                sparkle.Sparkle(false);
+                sparkle.SetSparkle(false);
             }
         }
 
