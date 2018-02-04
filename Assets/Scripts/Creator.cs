@@ -74,6 +74,17 @@ public class Creator : MonoBehaviour
 	public bool orgaInhaled = true;
 	public bool mechaInhaled = true;
 
+	private Vector3 originalScale;
+
+	[SerializeField]
+	protected float minimumSize = 0.5f;
+
+	[SerializeField]
+	protected float mediumSize = 1;
+	
+	[SerializeField]
+	protected float maxSize = 1.25f;
+
 #if UNITY_EDITOR
 	public KeyCode forceIgnite;
 #endif
@@ -83,6 +94,8 @@ public class Creator : MonoBehaviour
 		gamePad1 = GamePadController.GamePadOne;
 		gamePad2 = GamePadController.GamePadTwo;
 
+		originalScale = transform.localScale;
+		
 		aud = GetComponent<AudioSource>();
 		rb = GetComponent<Rigidbody>();
 
@@ -137,18 +150,15 @@ public class Creator : MonoBehaviour
 		{
 			if (ammo == 1)
 			{
-				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-				myCollider.radius = 10;
+				SetScale(minimumSize);
 			}
 			else if (ammo == 6)
 			{
-				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-				myCollider.radius = 25;
+				SetScale(maxSize);
 			}
 			else if (ammo == 3)
 			{
-				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-				myCollider.radius = 20;
+				SetScale(mediumSize);
 			}
 
 			rb.velocity = new Vector3(gamePad2.LeftStick.X * -speedy, gamePad2.LeftStick.Y * -speedy, 0);
@@ -186,24 +196,26 @@ public class Creator : MonoBehaviour
 		}
 	}
 
+	private void SetScale(float size)
+	{
+		transform.localScale = originalScale * size;
+	}
+
 	private void OrgaMovement()
 	{
 		if (gameObject.CompareTag("Orga"))
 		{
 			if (ammo == 1)
 			{
-				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-				myCollider.radius = 10;
+				SetScale(minimumSize);
 			}
 			else if (ammo == 6)
 			{
-				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-				myCollider.radius = 25;
+				SetScale(maxSize);
 			}
 			else if (ammo == 3)
 			{
-				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
-				myCollider.radius = 20;
+				SetScale(mediumSize);
 			}
 
 			rb.velocity = new Vector3(gamePad1.LeftStick.X * speedy, gamePad1.LeftStick.Y * speedy, 0);
