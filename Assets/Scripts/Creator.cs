@@ -10,6 +10,10 @@ using UnityEngine.SceneManagement;
 
 public class Creator : MonoBehaviour
 {
+
+	[SerializeField]
+	protected bool makeParticles = true;
+	
 	public int particleCap;
 	public GameObject particleTemplate;
 	public int gender;
@@ -97,10 +101,17 @@ public class Creator : MonoBehaviour
 		}
 
 		SoulMate = soulMate.GetComponent<Creator>();
-		
+		if (makeParticles)
+		{
+			CreateParticles();
+		}
+	}
+
+	private void CreateParticles()
+	{
 		//Generates soul
 		orbits = new OrbitBasket(1);
-		for(int i = 0; i < particleCap; i++)
+		for (int i = 0; i < particleCap; i++)
 		{
 			GameObject childObject = Instantiate(particleTemplate, transform.position,
 				Quaternion.Euler(new Vector3(Random.Range(0, 360), Random.Range(0, 360), 0))) as GameObject;
