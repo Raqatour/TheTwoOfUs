@@ -2,20 +2,12 @@
 	Attach yto "Origin" game object.
 */
 
-using System.Collections;
-using System.Collections.Generic;
 using Flusk;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Creator : MonoBehaviour
-{
-
-	[SerializeField]
-	protected bool makeParticles = true;
-	
-	public int particleCap;
-	public GameObject particleTemplate;
+{	
 	public int gender;
 	public GameObject soulMate;
 	
@@ -23,26 +15,22 @@ public class Creator : MonoBehaviour
 	public Creator SoulMate { get; private set; }
 	
 	
-	public float speed;
 	public Rigidbody rb;
 	public float radius;
 	public int purgatory;
-	public Vector3 pos;
 	public float speedy = 10.0f;
-	public GameObject bullet;
 	public int ammo = 3;
-	public int count = 0;
+	
 	public AudioClip exhale;
 	public AudioClip inhale;
 	public AudioClip whoosh;
 	public AudioSource aud;
+	
 	public bool isOrgaGlowing = true;
-	public bool isOrgaBig = false;
+	public bool isOrgaBig;
 	public bool isMechaGlowing = true;
-	public bool isMechaBig = false;
-	public bool isIgnited = false;
-
-	public int temp;
+	public bool isMechaBig;
+	public bool isIgnited;
 
 	private float horizontalZero;
 	private float verticalZero;
@@ -51,14 +39,11 @@ public class Creator : MonoBehaviour
 	private int countParticles = 0;
 	private bool canShoot = true;
 	private int track = 0;
-	public bool isEnded = false;
-	private bool isSpinning = false;
+	public bool isEnded;
+	private bool isSpinning;
 
 	public GameObject Ender;
 	public GameObject heart;
-	public bool m = false;
-	public bool fire0 = false;
-	public SphereCollider thisCollider;
 
 	public float squeezeTime = 5.0f;
 	public float timerSqueeze0 = 0.0f;
@@ -70,15 +55,6 @@ public class Creator : MonoBehaviour
 	public bool orgaInhaled = true;
 	public bool mechaInhaled = true;
 
-	private Light attachedLight;
-
-	[SerializeField, HideInInspector]
-	private OrbitBasket orbits = new OrbitBasket(10);
-
-	private void Awake()
-	{
-		attachedLight = GetComponent<Light>();
-	}
 
 	void Start()
 	{
@@ -89,7 +65,7 @@ public class Creator : MonoBehaviour
 		rb = GetComponent<Rigidbody>();
 
 
-		if(this.gameObject.tag == "Orga")
+		if(gameObject.CompareTag("Orga"))
 		{
 			soulMate = GameObject.FindGameObjectWithTag("Mecha");
 			gender = 0;
@@ -101,33 +77,11 @@ public class Creator : MonoBehaviour
 		}
 
 		SoulMate = soulMate.GetComponent<Creator>();
-		if (makeParticles)
-		{
-			CreateParticles();
-		}
-	}
-
-	private void CreateParticles()
-	{
-		//Generates soul
-		orbits = new OrbitBasket(1);
-		for (int i = 0; i < particleCap; i++)
-		{
-			GameObject childObject = Instantiate(particleTemplate, transform.position,
-				Quaternion.Euler(new Vector3(Random.Range(0, 360), Random.Range(0, 360), 0))) as GameObject;
-			Orbit orbit = childObject.GetComponent<Orbit>();
-			orbit.Init(this, attachedLight);
-			orbits.Add(orbit);
-			childObject.transform.SetParent(transform);
-		}
-
-		heart = null;
 	}
 
 	void Update()
 	{
 		// Update orbits
-		orbits.UpdateNext();
 		GamePadCheck();
 		//Movement and collider size change
 		Movement();
@@ -151,28 +105,22 @@ public class Creator : MonoBehaviour
 
 	private void MechaMovement()
 	{
-		if (this.gameObject.tag == "Mecha")
+		if (gameObject.CompareTag("Mecha"))
 		{
 			if (ammo == 1)
 			{
 				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
 				myCollider.radius = 10;
-				//thisCollider.radius = 10;
-				//transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 			}
 			else if (ammo == 6)
 			{
 				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
 				myCollider.radius = 25;
-				//thisCollider.radius = 25;
-				//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 			}
 			else if (ammo == 3)
 			{
 				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
 				myCollider.radius = 20;
-				//thisCollider.radius = 20;
-				//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 			}
 
 			rb.velocity = new Vector3(gamePad2.LeftStick.X * -speedy, gamePad2.LeftStick.Y * -speedy, 0);
@@ -212,31 +160,24 @@ public class Creator : MonoBehaviour
 
 	private void OrgaMovement()
 	{
-		if (this.gameObject.tag == "Orga")
+		if (gameObject.CompareTag("Orga"))
 		{
 			if (ammo == 1)
 			{
 				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
 				myCollider.radius = 10;
-				//thisCollider.radius = 10;
-				//transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 			}
 			else if (ammo == 6)
 			{
 				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
 				myCollider.radius = 25;
-				//thisCollider.radius = 25;
-				//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 			}
 			else if (ammo == 3)
 			{
 				SphereCollider myCollider = transform.GetComponent<SphereCollider>();
 				myCollider.radius = 20;
-				//thisCollider.radius = 20;
-				//transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 			}
 
-			//rb.MovePosition(transform.position + transform.up * Time.deltaTime * speedy);
 			rb.velocity = new Vector3(gamePad1.LeftStick.X * speedy, gamePad1.LeftStick.Y * speedy, 0);
 
 			//Collider size change
@@ -356,12 +297,10 @@ public class Creator : MonoBehaviour
 		}
 	}
 
-	void OnCollisionEnter(Collision other)
+	private void OnCollisionEnter(Collision other)
 	{
-		if(other.collider.tag == "Mecha")
+		if(other.collider.CompareTag("Mecha"))
 		{
-			//if(isOrgaGlowing || soulMate.GetComponent<Creator>().isMechaGlowing)
-			//{
 			soulMate.GetComponent<SphereCollider>().enabled = false;
 			this.GetComponent<SphereCollider>().enabled = false;
 			isOrgaGlowing = true;
@@ -379,12 +318,6 @@ public class Creator : MonoBehaviour
 				isEnded = true;
 				soulMate.GetComponent<Creator>().isEnded = true;
 			}
-			//}
 		}
-
-		/*if(other.collider.tag == "Wall")
-		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-		}*/
 	}
 }

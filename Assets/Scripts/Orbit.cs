@@ -6,16 +6,11 @@ public class Orbit : MonoBehaviour
 {
 	public float speed;
 	public int maxRadius;
-	public float oRange;
-	public float flirtTime;
 	public float orbitDistance;
 	public float callbackDistance;
 	public float minSpeed;
 	public float maxSpeed;
-	public int death = 1;
-	public GameObject[] balls1;
-	public GameObject[] balls2;
-	public bool isExternal;
+	public int death;
 	public float clipsize = 1.0f;
 	public Material GrayMat;
 	public Material GlowMat;
@@ -33,7 +28,6 @@ public class Orbit : MonoBehaviour
 	private int tempGender;
 	private float varRadius = 5.0f;
 
-	public int temp;
 
 	public Creator Creator { get; set; }
 	
@@ -307,7 +301,6 @@ public class Orbit : MonoBehaviour
 
 	private void SetData()
 	{
-		temp = transform.parent.childCount;
 		transform.localScale =
 			new Vector3(0.5f, 0.5f, 0.5f) * (2.0f - transform.parent.localScale.x);
 		Creator.radius = radius;
@@ -333,7 +326,7 @@ public class Orbit : MonoBehaviour
 						Creator.isOrgaBig = true;
 						//moving, spinning, and expanding
 						radius = varRadius *
-						         maxRadius; //* Mathf.Sqrt((Input.GetAxis("Horizontal0")*Input.GetAxis("Horizontal0")) + (Input.GetAxis("Vertical0")*Input.GetAxis("Vertical0")));
+						         maxRadius; 
 					}
 
 					transform.Translate(Vector3.forward * Time.deltaTime * speed);
