@@ -179,6 +179,14 @@
             <e p="TutLevel6.cs" t="Include" />
           </e>
           <e p="TwoOfUs" t="Include">
+            <e p="Development" t="Include">
+              <e p="FpsCounter.cs" t="Include" />
+              <e p="Tracking" t="Include">
+                <e p="FpsTracker.cs" t="Include" />
+                <e p="ITracker.cs" t="Include" />
+                <e p="TimeTracker.cs" t="Include" />
+              </e>
+            </e>
             <e p="Player" t="Include">
               <e p="Editor" t="Include">
                 <e p="EffectCreatorEditor.cs" t="Include" />
