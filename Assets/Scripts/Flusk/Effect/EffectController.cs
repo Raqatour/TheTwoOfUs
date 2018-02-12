@@ -37,12 +37,26 @@ namespace Flusk.Effect
         protected virtual void OnEnable()
         {
             parentCreator = GetComponentInParent<Creator>();
-            parentCreator.IgnitedChanged += Sparkle;
+            if (parentCreator.gender == 0)
+            {
+                parentCreator.OrgaGlowingChanged += Sparkle;
+            }
+            else if ( parentCreator.gender == 1)
+            {
+                parentCreator.MechaGlowingChanged += Sparkle;
+            }
         }
 
         protected virtual void OnDisable()
         {
-            parentCreator.IgnitedChanged -= Sparkle; 
+            if (parentCreator.gender == 0)
+            {
+                parentCreator.OrgaGlowingChanged -= Sparkle;
+            }
+            else if ( parentCreator.gender == 1)
+            {
+                parentCreator.MechaGlowingChanged -= Sparkle;
+            }
         }
     }
 }

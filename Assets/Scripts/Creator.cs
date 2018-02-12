@@ -27,13 +27,46 @@ public class Creator : MonoBehaviour
 	public AudioClip whoosh;
 	public AudioSource aud;
 	
-	public bool isOrgaGlowing = true;
-	public bool isOrgaBig;
-	public bool isMechaGlowing = true;
-	public bool isMechaBig;
+	[SerializeField]
+	protected bool isOrgaGlowing = true;
+	
+	[SerializeField]
+	protected bool isMechaGlowing = true;
 
+	public bool isOrgaBig;
+	public bool isMechaBig;
 	private bool isIgnited;
 
+
+	public event Action<bool> OrgaGlowingChanged;
+	public bool IsOrgaGlowing
+	{
+		get { return isOrgaGlowing; }
+		set
+		{
+			if (OrgaGlowingChanged != null)
+			{
+				OrgaGlowingChanged(value);
+			}
+			isOrgaGlowing = value;
+		}
+	}
+
+	public event Action<bool> MechaGlowingChanged;
+	public bool IsMechaGlowing
+	{
+		get { return isMechaGlowing; }
+		set
+		{
+			if  ( MechaGlowingChanged != null)
+			{
+				MechaGlowingChanged(value);
+			}
+			isMechaGlowing = value;
+		}
+	}
+
+	// Ignited data
 	public event Action<bool> IgnitedChanged;
 	public bool IsIgnited
 	{
@@ -76,6 +109,16 @@ public class Creator : MonoBehaviour
 
 	private Vector3 originalScale;
 
+	public float Scale
+	{
+		get { return transform.localScale.x; }
+	}
+
+	public float TotalScale
+	{
+		get { return Scale * orbit.Scale; }
+	}
+
 	[SerializeField]
 	protected float minimumSize = 0.5f;
 
@@ -85,9 +128,16 @@ public class Creator : MonoBehaviour
 	[SerializeField]
 	protected float maxSize = 1.25f;
 
+	private Orbit orbit;
+
 #if UNITY_EDITOR
 	public KeyCode forceIgnite;
 #endif
+
+	protected virtual void Awake()
+	{
+		orbit = GetComponentInChildren<Orbit>();
+	}
 
 	void Start()
 	{
@@ -99,23 +149,21 @@ public class Creator : MonoBehaviour
 		aud = GetComponent<AudioSource>();
 		rb = GetComponent<Rigidbody>();
 
-
 		if(gameObject.CompareTag("Orga"))
 		{
 			soulMate = GameObject.FindGameObjectWithTag("Mecha");
-			gender = 0;
 		}
 		else
 		{
 			soulMate = GameObject.FindGameObjectWithTag("Orga");
-			gender = 1;
 		}
 
 		SoulMate = soulMate.GetComponent<Creator>();
 	}
 
-	void Update()
+	protected virtual void Update()
 	{
+		orbit.UpdateOrbit();	
 		// Update orbits
 		GamePadCheck();
 		//Movement and collider size change
@@ -138,6 +186,8 @@ public class Creator : MonoBehaviour
 		}
 		else
 		{
+			IsMechaGlowing = IsOrgaGlowing = true;
+			
 			isSpinning = true;
 			soulMate.transform.localPosition = new Vector3(-20, 0, 0);
 			transform.localPosition = new Vector3(20, 0, 0);
@@ -343,7 +393,7 @@ public class Creator : MonoBehaviour
 		{
 			soulMate.GetComponent<SphereCollider>().enabled = false;
 			this.GetComponent<SphereCollider>().enabled = false;
-			isOrgaGlowing = true;
+			IsOrgaGlowing = true;
 			soulMate.GetComponent<Creator>().isMechaGlowing = true;
 			Instantiate(Ender, new Vector3((transform.position.x + other.transform.position.x)/2, (transform.position.y + other.transform.position.y)/2, 0), Quaternion.identity);
 			heart = GameObject.FindWithTag("Heart");

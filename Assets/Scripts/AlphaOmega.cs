@@ -13,7 +13,6 @@ public class AlphaOmega : MonoBehaviour
 		if(Orga.GetComponent<Creator>().isEnded && Mecha.GetComponent<Creator>().isEnded)
 		{
 			touched = true;
-			print(touched);
 		}
 	}
 }

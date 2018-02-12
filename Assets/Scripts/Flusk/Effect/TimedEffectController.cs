@@ -11,8 +11,12 @@ namespace Flusk.Effect
 
         public override void Sparkle(bool state)
         {
+            if (shrinkTimer != null || growTimer != null)
+            {
+                return;
+            }
             base.Sparkle(state);
-            if (state)
+            if (!state)
             {
                 SetUpShrink();
             }
@@ -32,6 +36,31 @@ namespace Flusk.Effect
             if (growTimer != null)
             {
                 growTimer.Tick(Time.deltaTime);
+            }
+        }
+
+        protected override void OnEnable()
+        {
+            parentCreator = GetComponentInParent<Creator>();
+            if (parentCreator.gender == 0)
+            {
+                parentCreator.OrgaGlowingChanged += Sparkle;
+            }
+            else if ( parentCreator.gender == 1)
+            {
+                parentCreator.MechaGlowingChanged += Sparkle;
+            }
+        }
+
+        protected override void OnDisable()
+        {
+            if (parentCreator.gender == 0)
+            {
+                parentCreator.OrgaGlowingChanged -= Sparkle;
+            }
+            else if ( parentCreator.gender == 1)
+            {
+                parentCreator.MechaGlowingChanged -= Sparkle;
             }
         }
 

@@ -7,9 +7,10 @@ public class PassageWay : MonoBehaviour
 {
 	void OnTriggerStay(Collider other)
 	{
-		if(other.GetComponent<Collider>().tag == "Orga" || other.GetComponent<Collider>().tag == "Mecha")
+		if(other.CompareTag("Orga") || other.CompareTag("Mecha"))
 		{
-			if(other.GetComponent<SphereCollider>().radius > 15)
+			Creator creator = other.GetComponent<Creator>();
+			if(creator.TotalScale > 15)
 			{
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 			}
