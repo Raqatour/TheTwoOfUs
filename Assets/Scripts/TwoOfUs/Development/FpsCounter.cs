@@ -11,6 +11,15 @@ namespace TwoOfUs.Development
 
         private float delay = 0.5f;
         private float start;
+
+        protected virtual void Awake()
+        {
+            if (!Debug.isDebugBuild)
+            {
+               Destroy(gameObject); 
+            }
+        }
+        
         
         protected virtual void Update()
         {
