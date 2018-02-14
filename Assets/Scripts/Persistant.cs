@@ -1,17 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Flusk.Patterns;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Persistant : MonoBehaviour
+public class Persistant : PersistentSingleton<Persistant>
 {
-	void Awake ()
-	{
-		DontDestroyOnLoad (this.gameObject);
 
-		if(FindObjectsOfType(GetType()).Length > 1)
-		{
-			Destroy(gameObject);
-		}
-	}
 }
