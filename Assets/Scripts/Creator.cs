@@ -186,9 +186,12 @@ public class Creator : MonoBehaviour
 		}
 		else
 		{
-			IsMechaGlowing = IsOrgaGlowing = true;
-			
+			if (isSpinning)
+			{
+				return;
+			}
 			isSpinning = true;
+			IsMechaGlowing = IsOrgaGlowing = true;
 			soulMate.transform.localPosition = new Vector3(-20, 0, 0);
 			transform.localPosition = new Vector3(20, 0, 0);
 		}

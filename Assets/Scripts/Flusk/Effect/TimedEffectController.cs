@@ -7,10 +7,16 @@ namespace Flusk.Effect
 {
     public class TimedEffectController : EffectController
     {
-        protected Timer shrinkTimer, growTimer;
+        private Timer shrinkTimer;
+        private Timer growTimer;
 
         public override void Sparkle(bool state)
         {
+            if (state == sparkleManager.IsSparkling)
+            {
+                return;
+            }
+            
             if (shrinkTimer != null || growTimer != null)
             {
                 return;

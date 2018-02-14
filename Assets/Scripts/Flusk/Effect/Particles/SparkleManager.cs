@@ -4,6 +4,11 @@ namespace Flusk.Effect.Particles
 {
     public class SparkleManager : MonoBehaviour
     {
+        public bool IsSparkling
+        {
+            get { return sparkle.isActiveAndEnabled; }
+        }
+        
         [SerializeField]
         protected SparkleParticles sparkle;
         public SparkleParticles Sparkle
