@@ -1,4 +1,5 @@
 ﻿using System;
+using TwoOfUs.Management;
 using TwoOfUs.Player.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,20 +12,25 @@ namespace TwoOfUs.Player
 		public GameObject soulMate;
 	
 		// The Creator of the soul mate
-		private Creator SoulMate { get; set; }
+		protected Creator SoulMate { get; set; }
 	
 	
 		public Rigidbody Rigidbody { get; private set; }
 		public float speedy = 10.0f;
 		public int ammo = 3;
 
-		private SoundEffectController SoundFx { get; set; }
+		protected SoundEffectController SoundFx { get; set; }
 	
 		[SerializeField]
 		protected bool isOrgaGlowing = true;
 	
 		[SerializeField]
 		protected bool isMechaGlowing = true;
+
+		[SerializeField]
+		protected KeyCode AnotherCharacterInhaleKey = KeyCode.V;
+
+		public GamePadController.Controller GamepadController { get; private set; }
 
 		public bool isOrgaBig;
 		public bool isMechaBig;
@@ -77,13 +83,6 @@ namespace TwoOfUs.Player
 			}
 		}
 
-		private float horizontalZero;
-		private float verticalZero;
-		private Vector3 movementZero;
-		private Vector3 wallDetection;
-		private int countParticles = 0;
-		private bool canShoot = true;
-		private int track = 0;
 		public bool isEnded;
 		private bool isSpinning;
 
@@ -127,14 +126,27 @@ namespace TwoOfUs.Player
 		public KeyCode forceIgnite;
 #endif
 
+		public void AssignGamepad(GamePadController.Controller controller)
+		{
+			GamepadController = controller;
+		}
+		
 		protected virtual void Awake()
 		{
 			SoundFx = GetComponentInChildren<SoundEffectController>();
 			orbit = GetComponentInChildren<Orbit>();
 		}
 
-		void Start()
+		protected virtual void Start()
 		{
+			LevelManager levelManager;
+			if (!LevelManager.TryGetInstance(out levelManager))
+			{
+				Debug.LogError("No LevelManager in the scene");
+			}
+			
+			levelManager.GetController(this);
+			
 			gamePad1 = GamePadController.GamePadOne;
 			gamePad2 = GamePadController.GamePadTwo;
 
@@ -142,22 +154,14 @@ namespace TwoOfUs.Player
 		
 			Rigidbody = GetComponent<Rigidbody>();
 
-			if(gameObject.CompareTag("Orga"))
-			{
-				soulMate = GameObject.FindGameObjectWithTag("Mecha");
-			}
-			else
-			{
-				soulMate = GameObject.FindGameObjectWithTag("Orga");
-			}
-
-			SoulMate = soulMate.GetComponent<Creator>();
+			
 		}
 
 		protected virtual void Update()
 		{
-			orbit.UpdateOrbit();	
 			// Update orbits
+			orbit.UpdateOrbit();	
+			
 			GamePadCheck();
 			//Movement and collider size change
 			Movement();
@@ -169,15 +173,9 @@ namespace TwoOfUs.Player
 #endif
 		}
 
-		private void Movement()
+		protected virtual void Movement()
 		{
-			if (!isEnded)
-			{
-				OrgaMovement();
-
-				MechaMovement();
-			}
-			else
+			if (isEnded)
 			{
 				if (isSpinning)
 				{
@@ -190,99 +188,9 @@ namespace TwoOfUs.Player
 			}
 		}
 
-		private void MechaMovement()
-		{
-			if (gameObject.CompareTag("Mecha"))
-			{
-				if (ammo == 1)
-				{
-					SetScale(minimumSize);
-				}
-				else if (ammo == 6)
-				{
-					SetScale(maxSize);
-				}
-				else if (ammo == 3)
-				{
-					SetScale(mediumSize);
-				}
-
-				Rigidbody.velocity = new Vector3(gamePad2.LeftStick.X * -speedy, gamePad2.LeftStick.Y * -speedy, 0);
-
-				if (Input.GetKey(KeyCode.V) || gamePad2.RightTrigger == 1 && gamePad2.B.Held)
-				{
-					timerSqueeze1 += Time.deltaTime;
-					if (isMechaBig && timerSqueeze1 < squeezeTime)
-					{
-						soulMate.GetComponent<Creator>().ammo = 1;
-						ammo = 6;
-						SoundFx.Exhale();
-					}
-				}
-
-				if (Input.GetKeyUp(KeyCode.V) || gamePad2.RightTrigger == 0 || timerSqueeze1 >= squeezeTime)
-				{
-					soulMate.GetComponent<Creator>().ammo = 3;
-					ammo = 3;
-				}
-
-				if (timerSqueeze1 >= squeezeTime && mechaInhaled == true)
-				{
-					SoundFx.Inhale();
-					mechaInhaled = false;
-				}
-			}
-		}
-
-		private void SetScale(float size)
+		protected void SetScale(float size)
 		{
 			transform.localScale = originalScale * size;
-		}
-
-		private void OrgaMovement()
-		{
-			if (gameObject.CompareTag("Orga"))
-			{
-				if (ammo == 1)
-				{
-					SetScale(minimumSize);
-				}
-				else if (ammo == 6)
-				{
-					SetScale(maxSize);
-				}
-				else if (ammo == 3)
-				{
-					SetScale(mediumSize);
-				}
-
-				Rigidbody.velocity = new Vector3(gamePad1.LeftStick.X * speedy, gamePad1.LeftStick.Y * speedy, 0);
-
-				//Collider size change
-				if (Input.GetKey(KeyCode.M) || gamePad1.RightTrigger == 1 && gamePad1.B.Held)
-				{
-					timerSqueeze0 += Time.deltaTime;
-					if (isOrgaBig && timerSqueeze0 < squeezeTime)
-					{
-						soulMate.GetComponent<Creator>().ammo = 1;
-						ammo = 6;
-						SoundFx.Exhale();
-					}
-				}
-
-				if (Input.GetKeyUp(KeyCode.M) || gamePad1.RightTrigger == 0 || timerSqueeze0 >= squeezeTime)
-				{
-					soulMate.GetComponent<Creator>().ammo = 3;
-					ammo = 3;
-				}
-
-				if (timerSqueeze0 >= squeezeTime && orgaInhaled == true)
-				{
-					SoundFx.Stop();
-					SoundFx.Inhale();
-					orgaInhaled = false;
-				}
-			}
 		}
 
 		private void GamePadCheck()

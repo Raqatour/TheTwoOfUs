@@ -185,9 +185,17 @@
                 <e p="TimeTracker.cs" t="Include" />
               </e>
             </e>
+            <e p="Management" t="Include">
+              <e p="GameManager.cs" t="Include" />
+              <e p="LevelManager.cs" t="Include" />
+            </e>
             <e p="Player" t="Include">
               <e p="Audio" t="Include">
                 <e p="SoundEffectController.cs" t="Include" />
+              </e>
+              <e p="Characters" t="Include">
+                <e p="Mecha.cs" t="Include" />
+                <e p="Orga.cs" t="Include" />
               </e>
               <e p="ControllerCreator.cs" t="Include" />
               <e p="Creator.cs" t="Include" />
