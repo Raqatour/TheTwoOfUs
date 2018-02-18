@@ -186,11 +186,14 @@
               </e>
             </e>
             <e p="Player" t="Include">
+              <e p="Audio" t="Include">
+                <e p="SoundEffectController.cs" t="Include" />
+              </e>
+              <e p="ControllerCreator.cs" t="Include" />
               <e p="Creator.cs" t="Include" />
               <e p="Editor" t="Include">
                 <e p="EffectCreatorEditor.cs" t="Include" />
               </e>
-              <e p="EffectCreator.cs" t="Include" />
             </e>
             <e p="TwoOfUsBehaviour.cs" t="Include" />
           </e>

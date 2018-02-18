@@ -1,10 +1,11 @@
 ﻿using System;
+using TwoOfUs.Player.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace TwoOfUs.Player
 {
-	public class Creator : MonoBehaviour
+	public class Creator : TwoOfUsBehaviour
 	{	
 		public int gender;
 		public GameObject soulMate;
@@ -16,11 +17,8 @@ namespace TwoOfUs.Player
 		public Rigidbody Rigidbody { get; private set; }
 		public float speedy = 10.0f;
 		public int ammo = 3;
-	
-		public AudioClip exhale;
-		public AudioClip inhale;
-		public AudioClip whoosh;
-		public AudioSource aud;
+
+		private SoundEffectController SoundFx { get; set; }
 	
 		[SerializeField]
 		protected bool isOrgaGlowing = true;
@@ -131,6 +129,7 @@ namespace TwoOfUs.Player
 
 		protected virtual void Awake()
 		{
+			SoundFx = GetComponentInChildren<SoundEffectController>();
 			orbit = GetComponentInChildren<Orbit>();
 		}
 
@@ -141,7 +140,6 @@ namespace TwoOfUs.Player
 
 			originalScale = transform.localScale;
 		
-			aud = GetComponent<AudioSource>();
 			Rigidbody = GetComponent<Rigidbody>();
 
 			if(gameObject.CompareTag("Orga"))
@@ -218,10 +216,7 @@ namespace TwoOfUs.Player
 					{
 						soulMate.GetComponent<Creator>().ammo = 1;
 						ammo = 6;
-						if (!aud.isPlaying)
-						{
-							aud.PlayOneShot(exhale, 1.0f);
-						}
+						SoundFx.Exhale();
 					}
 				}
 
@@ -233,12 +228,7 @@ namespace TwoOfUs.Player
 
 				if (timerSqueeze1 >= squeezeTime && mechaInhaled == true)
 				{
-					aud.Stop();
-					if (!aud.isPlaying)
-					{
-						aud.PlayOneShot(inhale, 1.0f);
-					}
-
+					SoundFx.Inhale();
 					mechaInhaled = false;
 				}
 			}
@@ -276,10 +266,7 @@ namespace TwoOfUs.Player
 					{
 						soulMate.GetComponent<Creator>().ammo = 1;
 						ammo = 6;
-						if (!aud.isPlaying)
-						{
-							aud.PlayOneShot(exhale, 1.0f);
-						}
+						SoundFx.Exhale();
 					}
 				}
 
@@ -291,12 +278,8 @@ namespace TwoOfUs.Player
 
 				if (timerSqueeze0 >= squeezeTime && orgaInhaled == true)
 				{
-					aud.Stop();
-					if (!aud.isPlaying)
-					{
-						aud.PlayOneShot(inhale, 1.0f);
-					}
-
+					SoundFx.Stop();
+					SoundFx.Inhale();
 					orgaInhaled = false;
 				}
 			}
@@ -387,26 +370,27 @@ namespace TwoOfUs.Player
 
 		private void OnCollisionEnter(Collision other)
 		{
-			if(other.collider.CompareTag("Mecha"))
+			if (!other.collider.CompareTag("Mecha"))
 			{
-				soulMate.GetComponent<SphereCollider>().enabled = false;
-				this.GetComponent<SphereCollider>().enabled = false;
-				IsOrgaGlowing = true;
-				soulMate.GetComponent<Creator>().isMechaGlowing = true;
-				Instantiate(Ender, new Vector3((transform.position.x + other.transform.position.x)/2, (transform.position.y + other.transform.position.y)/2, 0), Quaternion.identity);
-				heart = GameObject.FindWithTag("Heart");
-				if(heart != null)
-				{
-					if(!aud.isPlaying)
-					{
-						aud.PlayOneShot(whoosh, 0.5f);
-					}
-					soulMate.transform.parent = heart.transform;
-					this.transform.parent = heart.transform;
-					isEnded = true;
-					soulMate.GetComponent<Creator>().isEnded = true;
-				}
+				return;
 			}
+
+			soulMate.GetComponent<SphereCollider>().enabled = false;
+			GetComponent<SphereCollider>().enabled = false;
+			IsOrgaGlowing = true;
+			soulMate.GetComponent<Creator>().isMechaGlowing = true;
+			Instantiate(Ender, new Vector3((transform.position.x + other.transform.position.x)/2, (transform.position.y + other.transform.position.y)/2, 0), Quaternion.identity);
+			heart = GameObject.FindWithTag("Heart");
+			if (heart == null)
+			{
+				return;
+			}
+
+			SoundFx.Whoosh(0.5f);
+			soulMate.transform.parent = heart.transform;
+			transform.parent = heart.transform;
+			isEnded = true;
+			soulMate.GetComponent<Creator>().isEnded = true;
 		}
 	}
 }

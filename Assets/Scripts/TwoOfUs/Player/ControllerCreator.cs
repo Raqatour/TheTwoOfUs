@@ -4,13 +4,10 @@ using UnityEngine;
 namespace TwoOfUs.Player
 {
     [CanEditMultipleObjects]
-    public class EffectCreator : TwoOfUsBehaviour
+    public class ControllerCreator : TwoOfUsBehaviour
     {
         [SerializeField]
-        protected GameObject effect;
-
-        [SerializeField, HideInInspector]
-        protected GameObject spawn;
+        protected GameObject [] controllers;
         
 #if UNITY_EDITOR
         public
@@ -19,15 +16,15 @@ namespace TwoOfUs.Player
 #endif
             void Spawn()
         {
-            spawn = Instantiate(effect, transform);
+            int length = controllers.Length;
+            for (int i = 0; i < length; i++)
+            {
+                Instantiate(controllers[i], transform);
+            }
         }  
         
         protected virtual void Awake()
         {
-            if (spawn != null)
-            {
-                Destroy(spawn);
-            }
             Spawn();
         }
         

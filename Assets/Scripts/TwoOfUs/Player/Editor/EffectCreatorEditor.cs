@@ -4,10 +4,10 @@ using UnityEngine;
 namespace TwoOfUs.Player.Editor
 {
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(EffectCreator))]
+    [CustomEditor(typeof(ControllerCreator))]
     public class EffectCreatorEditor : UnityEditor.Editor
     {
-        private EffectCreator creator;
+        private ControllerCreator creator;
 
         public override void OnInspectorGUI()
         {
@@ -21,7 +21,7 @@ namespace TwoOfUs.Player.Editor
 
         protected virtual void OnEnable()
         {
-            creator = (EffectCreator) target;
+            creator = (ControllerCreator) target;
         }
     }
 }

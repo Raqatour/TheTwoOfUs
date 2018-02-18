@@ -38,5 +38,16 @@ namespace TwoOfUs
             }
             b.Destroy();
         }
+
+        public T GetOrAddComponent<T>() where T : Component
+        {
+            T component = GetComponent<T>();
+            if (component == null)
+            {
+                component = gameObject.AddComponent<T>();
+            }
+
+            return component;
+        }
     }
 }
