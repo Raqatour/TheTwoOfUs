@@ -1,5 +1,6 @@
 ﻿using Flusk.Extensions;
 using Flusk.Utility;
+using TwoOfUs.Player;
 using UnityEngine;
 
 namespace Flusk.Effect

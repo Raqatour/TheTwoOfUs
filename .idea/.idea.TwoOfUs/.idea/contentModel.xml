@@ -61,11 +61,9 @@
           <e p="BigCircle.cs" t="Include" />
           <e p="BulletBehaviour.cs" t="Include" />
           <e p="ColorWall.cs" t="Include" />
-          <e p="Creator.cs" t="Include" />
           <e p="EndScene.cs" t="Include" />
           <e p="EnemyBehaviour.cs" t="Include" />
           <e p="Flusk" t="Include">
-            <e p="BasketList.cs" t="Include" />
             <e p="Controls" t="Include">
               <e p="KeyboardControls.cs" t="Include" />
               <e p="KeyCheck.cs" t="Include" />
@@ -121,7 +119,6 @@
               <e p="MainPrefab.cs" t="Include" />
               <e p="MouseManager.cs" t="Include" />
             </e>
-            <e p="OrbitBasket.cs" t="Include" />
             <e p="Patterns" t="Include">
               <e p="PersistentSingleton.cs" t="Include" />
               <e p="Singleton.cs" t="Include" />
@@ -189,6 +186,7 @@
               </e>
             </e>
             <e p="Player" t="Include">
+              <e p="Creator.cs" t="Include" />
               <e p="Editor" t="Include">
                 <e p="EffectCreatorEditor.cs" t="Include" />
               </e>

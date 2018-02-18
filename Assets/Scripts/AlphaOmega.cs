@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TwoOfUs.Player;
 using UnityEngine;
 
 public class AlphaOmega : MonoBehaviour

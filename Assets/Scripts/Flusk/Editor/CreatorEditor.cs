@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using TwoOfUs.Player;
+using UnityEditor;
 using UnityEngine;
 
 namespace Flusk.Editor
