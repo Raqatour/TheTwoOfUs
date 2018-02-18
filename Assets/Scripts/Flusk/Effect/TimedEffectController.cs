@@ -1,5 +1,4 @@
-﻿using System;
-using Flusk.Extensions;
+﻿using Flusk.Extensions;
 using Flusk.Utility;
 using UnityEngine;
 

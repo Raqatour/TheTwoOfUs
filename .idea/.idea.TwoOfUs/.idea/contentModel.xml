@@ -30,7 +30,6 @@
           </e>
         </e>
         <e p="Particle Ribbon by Moonflower Carnivore" t="Include">
-          <e p="readme_Simple_Particle_Ribbon.txt" t="Include" />
           <e p="Scripts" t="Include">
             <e p="randomParticleRotation.cs" t="Include" />
             <e p="ReverseNormals.cs" t="Include" />
@@ -50,11 +49,8 @@
         <e p="Scenes" t="Include">
           <e p="Test" t="Include">
             <e p="Shader" t="Include">
-              <e p="Inner_Fresnel Toon.shader" t="Include" />
               <e p="Inner_Fresnel.shader" t="Include" />
               <e p="Outer_fresnel.shader" t="Include" />
-              <e p="Particle_Shader.shader" t="Include" />
-              <e p="Pink_Fresnel.shader" t="Include" />
             </e>
           </e>
         </e>
@@ -119,6 +115,12 @@
               <e p="AnimationCallback.cs" t="Include" />
               <e p="Numbers.cs" t="Include" />
             </e>
+            <e p="Management" t="Include">
+              <e p="InitBehaviour.cs" t="Include" />
+              <e p="Initialisation.cs" t="Include" />
+              <e p="MainPrefab.cs" t="Include" />
+              <e p="MouseManager.cs" t="Include" />
+            </e>
             <e p="OrbitBasket.cs" t="Include" />
             <e p="Patterns" t="Include">
               <e p="PersistentSingleton.cs" t="Include" />
@@ -157,7 +159,6 @@
           <e p="SpermTailMovement.cs" t="Include" />
           <e p="SpinAroundSelf.cs" t="Include" />
           <e p="TestArduino.cs" t="Include" />
-          <e p="TestCollision.cs" t="Include" />
           <e p="TutLevel1.cs" t="Include" />
           <e p="TutLevel1_1.cs" t="Include" />
           <e p="TutLevel2.cs" t="Include" />
@@ -843,11 +844,9 @@
           </e>
         </e>
         <e p="XInputDotNet" t="Include">
-          <e p="Docs.txt" t="Include" />
           <e p="Examples" t="Include">
             <e p="XInputTestCS.cs" t="Include" />
           </e>
-          <e p="MITLicense.txt" t="Include" />
         </e>
       </e>
       <e p="Library" t="ExcludeRecursive" />
