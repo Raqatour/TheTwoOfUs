@@ -3,6 +3,7 @@ using Flusk.Effect.Spheres;
 using Flusk.Extensions;
 using Flusk.Utility;
 using TwoOfUs.Player;
+using TwoOfUs.Player.Characters;
 using UnityEngine;
 
 namespace Flusk.Effect
@@ -38,25 +39,25 @@ namespace Flusk.Effect
         protected virtual void OnEnable()
         {
             parentCreator = GetComponentInParent<Creator>();
-            if (parentCreator.gender == 0)
+            if (parentCreator is Orga)
             {
-                parentCreator.OrgaGlowingChanged += Sparkle;
+                (parentCreator as Orga).OrgaGlowingChanged += Sparkle;
             }
-            else if ( parentCreator.gender == 1)
+            else if ( parentCreator is Mecha)
             {
-                parentCreator.MechaGlowingChanged += Sparkle;
+                (parentCreator as Mecha).MechaGlowingChanged += Sparkle;
             }
         }
 
         protected virtual void OnDisable()
         {
-            if (parentCreator.gender == 0)
+            if (parentCreator is Orga)
             {
-                parentCreator.OrgaGlowingChanged -= Sparkle;
+                (parentCreator as Orga).OrgaGlowingChanged -= Sparkle;
             }
-            else if ( parentCreator.gender == 1)
+            else if ( parentCreator is Mecha)
             {
-                parentCreator.MechaGlowingChanged -= Sparkle;
+                (parentCreator as Mecha).MechaGlowingChanged -= Sparkle;
             }
         }
     }

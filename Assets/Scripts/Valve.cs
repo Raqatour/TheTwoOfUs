@@ -12,7 +12,7 @@ public class Valve : MonoBehaviour
 		if(other.GetComponent<Collider>().tag == "Orga" || other.GetComponent<Collider>().tag == "Mecha")
 		{
 			isEntered = true;
-			other.GetComponent<Creator>().speedy = 100.0f;
+			other.GetComponent<Creator>().speed = 100.0f;
 		}
 	}
 
@@ -21,7 +21,7 @@ public class Valve : MonoBehaviour
 		if(other.GetComponent<Collider>().tag == "Orga" || other.GetComponent<Collider>().tag == "Mecha")
 		{
 			isEntered = false;
-			other.GetComponent<Creator>().speedy = 50.0f;
+			other.GetComponent<Creator>().speed = 50.0f;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TwoOfUs.Player;
+using TwoOfUs.Player.Characters;
 using UnityEngine;
 
 public class Reignite : MonoBehaviour
@@ -22,8 +23,8 @@ public class Reignite : MonoBehaviour
 		{
 			isButtonUp = true;
 			otherCreator.soulMate.GetComponent<Creator>().timerSqueeze1 = 5;
-			otherCreator.IsOrgaGlowing = true;
-			otherCreator.soulMate.GetComponent<Creator>().IsMechaGlowing = true;
+			(otherCreator as Orga).IsOrgaGlowing = true;
+			(otherCreator.soulMate.GetComponent<Creator>() as Mecha).IsMechaGlowing = true;
 			otherCreator.IsIgnited = true;
 			otherCreator.soulMate.GetComponent<Creator>().IsIgnited = true;
 			if(!aud.isPlaying)
@@ -35,9 +36,9 @@ public class Reignite : MonoBehaviour
 		if(other.CompareTag("Mecha"))
 		{
 			isButtonUp = true;
-			otherCreator.soulMate.GetComponent<Creator>().timerSqueeze0 = 5;
-			otherCreator.IsMechaGlowing = true;
-			otherCreator.soulMate.GetComponent<Creator>().IsOrgaGlowing = true;
+			otherCreator.soulMate.GetComponent<Creator>().ForceFinishTimer();
+			(otherCreator as Mecha).IsMechaGlowing = true;
+			(otherCreator.soulMate.GetComponent<Creator>() as Orga).IsOrgaGlowing = true;
 			otherCreator.IsIgnited = true;
 			otherCreator.soulMate.GetComponent<Creator>().IsIgnited = true;
 			if(!aud.isPlaying)
@@ -53,8 +54,8 @@ public class Reignite : MonoBehaviour
 		{
 			if(other.GetComponent<Creator>().gamePad2.RightTrigger == 0 && isButtonUp)
 			{
-				other.GetComponent<Creator>().timerSqueeze0 = 0;
-				other.GetComponent<Creator>().soulMate.GetComponent<Creator>().timerSqueeze1 = 0;
+				other.GetComponent<Creator>().ForceFinishTimer(true);
+				other.GetComponent<Creator>().soulMate.GetComponent<Creator>().ForceFinishTimer(true);
 				isButtonUp = false;
 			}
 		}
@@ -63,8 +64,8 @@ public class Reignite : MonoBehaviour
 		{
 			if(other.GetComponent<Creator>().gamePad1.RightTrigger == 0 && isButtonUp)
 			{
-				other.GetComponent<Creator>().timerSqueeze1 = 0;
-				other.GetComponent<Creator>().soulMate.GetComponent<Creator>().timerSqueeze0 = 0;
+				other.GetComponent<Creator>().ForceFinishTimer(true);;
+				other.GetComponent<Creator>().soulMate.GetComponent<Creator>().ForceFinishTimer(true);
 				isButtonUp = false;
 			}
 		}

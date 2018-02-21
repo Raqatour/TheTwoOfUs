@@ -10,12 +10,12 @@ public class BigBadWall : MonoBehaviour
 	{
 		if(other.collider.tag == "Orga" || other.collider.tag == "Mecha")
 		{
-			if(other.gameObject.GetComponent<Creator>().ammo == 6)
+			if(other.gameObject.GetComponent<Creator>().Ammo == 6)
 			{
 				GetComponent<BoxCollider>().enabled = false;
 			}
 
-			if(other.gameObject.GetComponent<Creator>().ammo < 3)
+			if(other.gameObject.GetComponent<Creator>().Ammo < 3)
 			{
 				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 			}

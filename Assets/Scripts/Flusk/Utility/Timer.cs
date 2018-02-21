@@ -7,29 +7,39 @@ namespace Flusk.Utility
         public Action Complete;
         public Action<float> Update;
 
-        private float time = 0;
-        private float goal = 0;
+        public bool IsRunning { get; protected set; }
+
+        public float Time { get; private set; }
+        
+        public float Goal { get; private set; }
 
         public Timer (float time, Action onComplete = null )
         {
-            goal = time;
+            Goal = time;
             Complete = onComplete;
         }
 
         public virtual void Reset()
         {
-            time = 0;
+            Time = 0;
+            IsRunning = true;
         }
 
         public void Tick (float deltaTime)
         {
-            time += deltaTime;
+            if (!IsRunning)
+            {
+                return;
+            }
+            
+            Time += deltaTime;
             if (Update != null)
             {
-                Update(time);
+                Update(Time);
             }
-            if ( time > goal )
+            if ( Time > Goal )
             {
+                IsRunning = false;
                 Fire();
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TwoOfUs.Player;
+using TwoOfUs.Player.Characters;
 using UnityEngine;
 
 public class Orbit : MonoBehaviour
@@ -29,7 +30,7 @@ public class Orbit : MonoBehaviour
 			Creator = GetComponentInParent<Creator>();
 			ParentLight = GetComponentInParent<Light>();
 		}
-		subGender = Creator.gender;
+		subGender = Creator.Gender;
 	}
 
 	public void UpdateOrbit ()
@@ -57,80 +58,77 @@ public class Orbit : MonoBehaviour
 			return;
 		}
 
-		if (subGender == 0) 
-		{
-			Creator.IsOrgaGlowing = true;
-		}
-		else
-		{
-			Creator.IsMechaGlowing = true;
-		}
+		Creator.IsGlowing = true;
 
-		var visiblyActive = Creator.IsOrgaGlowing  &&	Creator.IsMechaGlowing  && Creator.IsIgnited;
+		var visiblyActive = Creator.IsGlowing  && Creator.IsIgnited;
 		if (!visiblyActive)
 		{
 			return;
 		}
 		Creator.IsIgnited = false;
-		Creator.IsMechaGlowing = true;
-		Creator.IsOrgaGlowing = true;
+		Creator.IsGlowing = true;
+		Creator.IsGlowing = true;
 	}
 
 
 	private void SetData()
 	{
-		subGender = Creator.gender;
+		subGender = Creator.Gender;
 	}
 
 	private void SubGender()
 	{
 		if (subGender == 0)
 		{
+			Orga orga = (Orga) Creator;				
 			//Orga
 			//Spinning and orbiting
 			if (Input.GetKey(KeyCode.M) || Creator.gamePad1.RightTrigger == 1 && Creator.gamePad1.B.Held && !Creator.IsIgnited)
 			{
-				if (Creator.timerSqueeze0 < Creator.squeezeTime)
+				// is squeeze timer still running
+				if (orga.SqueezeTimer.IsRunning)
 				{
-					if (Creator.IsOrgaGlowing)
+					if (orga.IsOrgaGlowing)
 					{
-						Creator.isOrgaBig = true;
+						orga.isOrgaBig = true;
 					}
 				}
 			}
 			
-			if (Creator.isOrgaBig && Creator.gamePad1.RightTrigger == 0)
+			if (orga.isOrgaBig && Creator.gamePad1.RightTrigger == 0)
 			{
-				Creator.IsOrgaGlowing = false;
-				Creator.isOrgaBig = false;
+				orga.IsOrgaGlowing = false;
+				orga.isOrgaBig = false;
 			}
 		}
 		else
 		{
+			Mecha mecha = (Mecha) Creator;
+			
 			//Spinning and orbiting
-			if (Input.GetKey(KeyCode.V) || Creator.gamePad2.RightTrigger == 1 &&
-			    Creator.gamePad2.B.Held && !Creator.IsIgnited)
+			if (Input.GetKey(KeyCode.V) || mecha.gamePad2.RightTrigger == 1 &&
+			    mecha.gamePad2.B.Held && !mecha.IsIgnited)
 			{
-				if (Creator.timerSqueeze1 < Creator.squeezeTime)
+				if (mecha.SqueezeTimer.IsRunning)
 				{
-					if (Creator.IsMechaGlowing)
+					if (mecha.IsMechaGlowing)
 					{
-						Creator.isMechaBig = true;
+						mecha.isMechaBig = true;
 					}
 				}
 			}
 
-			if (Creator.isMechaBig && Creator.gamePad2.RightTrigger == 0)
+			if (mecha.isMechaBig && Creator.gamePad2.RightTrigger == 0)
 			{
-				Creator.IsMechaGlowing = false;
-				Creator.isMechaBig = false;
+				mecha.IsMechaGlowing = false;
+				mecha.isMechaBig = false;
 			}
 		}
 	}
 
 	private void RenderingStates()
 	{
-		if (!Creator.IsOrgaGlowing || !Creator.IsMechaGlowing)
+		if (!Creator.IsGlowing)
 		{
 			ParentLight.intensity = 75;
 			ParentLight.range = 75;
@@ -143,18 +141,8 @@ public class Orbit : MonoBehaviour
 			ParentLight.color = new Color32(0x69, 0x4F, 0xAC, 0x80);
 		}
 
-		if (Creator.isOrgaBig && !Creator.IsIgnited)
-		{
-			ParentLight.range = 75 / Creator.timerSqueeze0;
-			ParentLight.color = Color32.Lerp(new Color32(0x69, 0x4F, 0xAC, 0x80),
-				new Color32(0x4B, 0x00, 0x82, 0x80), Creator.timerSqueeze0 / 5);
-		}
-
-		if (Creator.isMechaBig && !Creator.IsIgnited)
-		{
-			ParentLight.range = 75 / Creator.timerSqueeze1;
-			ParentLight.color = Color32.Lerp(new Color32(0x69, 0x4F, 0xAC, 0x80),
-				new Color32(0x4B, 0x00, 0x82, 0x80), Creator.timerSqueeze1 / 5);
-		}
+		ParentLight.range = 75 / Creator.SqueezeTimer.Time;
+		ParentLight.color = Color32.Lerp(new Color32(0x69, 0x4F, 0xAC, 0x80),
+			new Color32(0x4B, 0x00, 0x82, 0x80), Creator.SqueezeTimer.Time / 5);
 	}
 }

@@ -131,6 +131,7 @@
             </e>
             <e p="Structures" t="Include">
               <e p="Range.cs" t="Include" />
+              <e p="SizeRange.cs" t="Include" />
             </e>
             <e p="Tools" t="Include">
               <e p="SeparateColliders.cs" t="Include" />
@@ -139,6 +140,7 @@
               <e p="AnimatorWrapper.cs" t="Include" />
               <e p="IState.cs" t="Include" />
               <e p="KeyStateMachine.cs" t="Include" />
+              <e p="ModifyableValue.cs" t="Include" />
               <e p="StateMachine.cs" t="Include" />
               <e p="Timer.cs" t="Include" />
             </e>
@@ -146,6 +148,9 @@
           <e p="Gazer.cs" t="Include" />
           <e p="Heart.cs" t="Include" />
           <e p="LaunchGamePadController.cs" t="Include" />
+          <e p="LaunchGamePadHelper" t="Include">
+            <e p="LaunchGamePadExtensions.cs" t="Include" />
+          </e>
           <e p="MenuControl.cs" t="Include" />
           <e p="Orbit.cs" t="Include" />
           <e p="PassageWay.cs" t="Include" />
@@ -201,6 +206,9 @@
               <e p="Creator.cs" t="Include" />
               <e p="Editor" t="Include">
                 <e p="EffectCreatorEditor.cs" t="Include" />
+              </e>
+              <e p="Peripheral" t="Include">
+                <e p="TimeVibrationController.cs" t="Include" />
               </e>
             </e>
             <e p="TwoOfUsBehaviour.cs" t="Include" />

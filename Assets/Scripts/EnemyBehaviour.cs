@@ -35,11 +35,11 @@ public class EnemyBehaviour : MonoBehaviour
 			{
 				if(hit1.collider.tag != "Wall")
 				{
-						if(Orga.GetComponent<Creator>().ammo < Mecha.GetComponent<Creator>().ammo)
+						if(Orga.GetComponent<Creator>().Ammo < Mecha.GetComponent<Creator>().Ammo)
 						{
 							target = Orga.transform;
 						}
-						else if(Mecha.GetComponent<Creator>().ammo < Orga.GetComponent<Creator>().ammo)
+						else if(Mecha.GetComponent<Creator>().Ammo < Orga.GetComponent<Creator>().Ammo)
 						{
 							target = Mecha.transform;
 						}
@@ -69,11 +69,11 @@ public class EnemyBehaviour : MonoBehaviour
 			{
 				if(hit0.collider.tag != "Wall")
 				{
-						if(Orga.GetComponent<Creator>().ammo < Mecha.GetComponent<Creator>().ammo)
+						if(Orga.GetComponent<Creator>().Ammo < Mecha.GetComponent<Creator>().Ammo)
 						{
 							target = Orga.transform;
 						}
-						else if(Mecha.GetComponent<Creator>().ammo < Orga.GetComponent<Creator>().ammo)
+						else if(Mecha.GetComponent<Creator>().Ammo < Orga.GetComponent<Creator>().Ammo)
 						{
 							target = Mecha.transform;
 						}

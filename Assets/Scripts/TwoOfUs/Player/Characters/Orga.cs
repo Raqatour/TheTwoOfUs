@@ -1,11 +1,40 @@
 ﻿using System;
+using Flusk.Utility;
+using LaunchGamePadHelper;
 using TwoOfUs.Management;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TwoOfUs.Player.Characters
 {
     public class Orga : Creator
     {
+        public bool inhaled = true;
+
+        [SerializeField]
+        protected bool isOrgaGlowing = true;
+
+        public override bool IsGlowing
+        {
+            get { return isOrgaGlowing; }
+            set { IsOrgaGlowing = value; }
+        }
+
+        public bool isOrgaBig;
+
+        public bool IsOrgaGlowing
+        {
+            get { return isOrgaGlowing; }
+            set
+            {
+                if (OrgaGlowingChanged != null)
+                {
+                    OrgaGlowingChanged(value);
+                }
+                isOrgaGlowing = IsGlowing = value;
+            }
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -32,45 +61,98 @@ namespace TwoOfUs.Player.Characters
 
         private void OrgaMovement()
         {
-            if (ammo == 1)
+            if (Ammo == 1)
             {
                 SetScale(minimumSize);
             }
-            else if (ammo == 6)
+            else if (Ammo == 6)
             {
                 SetScale(maxSize);
             }
-            else if (ammo == 3)
+            else if (Ammo == 3)
             {
                 SetScale(mediumSize);
             }
 
-            Rigidbody.velocity = new Vector3(GamepadController.LeftStick.X * speedy, GamepadController.LeftStick.Y * speedy, 0);
+            Rigidbody.velocity = GamepadController.LeftStick.GetVector3() * speed;
 
-            //Collider size change
-            if (Input.GetKey(KeyCode.M) || GamepadController.RightTrigger == 1 && GamepadController.B.Held)
+            // Collider size change
+            if (Input.GetKey(anotherCharacterInhaleKey) || GamepadController.RightTrigger == 1 && GamepadController.B.Held)
             {
-                timerSqueeze0 += Time.deltaTime;
-                if (isOrgaBig && timerSqueeze0 < squeezeTime)
+                if (SqueezeTimer == null || !SqueezeTimer.IsRunning)
                 {
-                    SoulMate.ammo = 1;
-                    ammo = 6;
+                    SqueezeTimer = new Timer(squeezeTime, OnTimerComplete);
+                    SqueezeTimer.Update = OnTimerUpdate;
+                }
+                
+                SqueezeTimer.Tick(Time.deltaTime);
+
+                if (!IsIgnited && SqueezeTimer.IsRunning && IsOrgaGlowing )
+                {
+                    isOrgaBig = true;
+                }
+                
+                //TODO: This is probably going to run waaaaay tooo often
+                if (isOrgaBig && SqueezeTimer.IsRunning)
+                {
+                    SoulMate.Ammo = 1;
+                    Ammo = 6;
                     SoundFx.Exhale();
                 }
             }
 
-            if (Input.GetKeyUp(AnotherCharacterInhaleKey) || GamepadController.RightTrigger == 0 || timerSqueeze0 >= squeezeTime)
+            // Creator is big and player let go
+            if (isOrgaBig && GamepadController.RightTrigger == 0)
             {
-                soulMate.GetComponent<Creator>().ammo = 3;
-                ammo = 3;
+                isOrgaGlowing = isOrgaBig = false;
             }
 
-            if (timerSqueeze0 >= squeezeTime && orgaInhaled == true)
+            if (Input.GetKeyUp(anotherCharacterInhaleKey) || GamepadController.RightTrigger == 0 || !SqueezeTimer.IsRunning)
             {
-                SoundFx.Stop();
-                SoundFx.Inhale();
-                orgaInhaled = false;
+                soulMate.GetComponent<Creator>().Ammo = 3;
+                Ammo = 3;
+            }
+            
+            GamePadeOneCheck();
+        }
+
+        private void OnTimerComplete()
+        {
+            if (!inhaled)
+            {
+                return;
+            }
+            SoundFx.Stop();
+            SoundFx.Inhale();
+            inhaled = false;
+            
+            GamepadController.StopVibration();
+            
+        }
+
+        protected void GamePadeOneCheck()
+        {
+            if (gamePad1.RightTrigger == 0 && SqueezeTimer.IsRunning)
+            {
+                ForceFinishTimer();
+            }
+			
+            if (GamepadController.X.Pressed)
+            {
+                SceneManager.LoadScene(0);
+            }
+			
+            if (GamepadController.RightTrigger == 0)
+            {
+                gamePad1.StopVibration();
             }
         }
+
+        private void OnTimerUpdate(float time)
+        {
+            vibrationController.SetCurrentTime(time);
+        }
+
+        public event Action<bool> OrgaGlowingChanged;
     }
 }

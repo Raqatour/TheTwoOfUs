@@ -6,6 +6,31 @@ namespace TwoOfUs.Player.Characters
 {
     public class Mecha : Creator
     {
+        public bool mechaInhaled = true;
+        public bool isMechaBig;
+
+        [SerializeField]
+        protected bool isMechaGlowing = true;
+        
+        public override bool IsGlowing
+        {
+            get { return isMechaGlowing; }
+            set { IsMechaGlowing = value; }
+        }
+
+        public bool IsMechaGlowing
+        {
+            get { return isMechaGlowing; }
+            set
+            {
+                if  ( MechaGlowingChanged != null)
+                {
+                    MechaGlowingChanged(value);
+                }
+                isMechaGlowing = IsGlowing = value;
+            }
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -31,36 +56,36 @@ namespace TwoOfUs.Player.Characters
 
         private void MechaMovement()
         {
-            if (ammo == 1)
+            if (Ammo == 1)
             {
                 SetScale(minimumSize);
             }
-            else if (ammo == 6)
+            else if (Ammo == 6)
             {
                 SetScale(maxSize);
             }
-            else if (ammo == 3)
+            else if (Ammo == 3)
             {
                 SetScale(mediumSize);
             }
 
-            Rigidbody.velocity = new Vector3(GamepadController.LeftStick.X * -speedy, GamepadController.LeftStick.Y * -speedy, 0);
+            Rigidbody.velocity = new Vector3(GamepadController.LeftStick.X * -speed, GamepadController.LeftStick.Y * -speed, 0);
 
-            if (Input.GetKey(KeyCode.V) || GamepadController.RightTrigger == 1 && GamepadController.B.Held)
+            if (Input.GetKey(anotherCharacterInhaleKey) || GamepadController.RightTrigger == 1 && GamepadController.B.Held)
             {
                 timerSqueeze1 += Time.deltaTime;
                 if (isMechaBig && timerSqueeze1 < squeezeTime)
                 {
-                    soulMate.GetComponent<Creator>().ammo = 1;
-                    ammo = 6;
+                    soulMate.GetComponent<Creator>().Ammo = 1;
+                    Ammo = 6;
                     SoundFx.Exhale();
                 }
             }
 
-            if (Input.GetKeyUp(AnotherCharacterInhaleKey) || GamepadController.RightTrigger == 0 || timerSqueeze1 >= squeezeTime)
+            if (Input.GetKeyUp(anotherCharacterInhaleKey) || GamepadController.RightTrigger == 0 || timerSqueeze1 >= squeezeTime)
             {
-                soulMate.GetComponent<Creator>().ammo = 3;
-                ammo = 3;
+                soulMate.GetComponent<Creator>().Ammo = 3;
+                Ammo = 3;
             }
 
             if (timerSqueeze1 >= squeezeTime && mechaInhaled == true)
@@ -69,5 +94,47 @@ namespace TwoOfUs.Player.Characters
                 mechaInhaled = false;
             }
         }
+
+        private void GamePadTwoCheck()
+        {
+            if (gamePad2.RightTrigger == 0 && timerSqueeze1 > 0)
+            {
+                timerSqueeze1 = 5;
+            }
+
+            if (timerSqueeze1 >= squeezeTime)
+            {
+                gamePad2.StopVibration();
+            }
+            else if (timerSqueeze1 >= 0.8f * squeezeTime && timerSqueeze1 < squeezeTime)
+            {
+                gamePad2.SetVibration(90, 90);
+            }
+            else if (timerSqueeze1 >= 0.6f * squeezeTime && timerSqueeze1 < 4 * squeezeTime / 5)
+            {
+                gamePad2.SetVibration(60, 60);
+            }
+            else if (timerSqueeze1 >= 0.4f * squeezeTime && timerSqueeze1 < 3 * squeezeTime / 5)
+            {
+                gamePad2.SetVibration(35, 35);
+            }
+            else if (timerSqueeze1 >= 0.2f * squeezeTime && timerSqueeze1 < 2 * squeezeTime / 5)
+            {
+                gamePad2.SetVibration(15, 15);
+            }
+            else if (timerSqueeze1 > 0 && timerSqueeze1 < squeezeTime / 5)
+            {
+                gamePad2.SetVibration(5, 5);
+            }
+
+			
+
+            if (gamePad2.RightTrigger == 0)
+            {
+                gamePad2.StopVibration();
+            }
+        }
+
+        public event Action<bool> MechaGlowingChanged;
     }
 }
