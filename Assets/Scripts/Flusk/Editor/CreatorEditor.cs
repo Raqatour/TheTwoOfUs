@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Flusk.Editor
 {
-    [CustomEditor(typeof(Creator))]
+    [CustomEditor(typeof(Creator)), CanEditMultipleObjects]
     public class CreatorEditor : UnityEditor.Editor
     {
         private Creator creator;

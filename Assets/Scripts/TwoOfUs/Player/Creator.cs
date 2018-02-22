@@ -82,7 +82,7 @@ namespace TwoOfUs.Player
 		public bool isEnded;
 		private bool isSpinning;
 
-		public GameObject Ender;
+		public SpinAroundSelf Ender;
 		public GameObject heart;
 
 		[SerializeField]
