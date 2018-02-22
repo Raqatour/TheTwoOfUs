@@ -3,7 +3,7 @@
 namespace TwoOfUs.Player.Audio
 {
     [RequireComponent(typeof(AudioSource))]
-    public class SoundEffectController : MonoBehaviour
+    public class SoundEffectController : TwoOfUsBehaviour, IPlayerController
     {
         [SerializeField]
         protected AudioClip exhale, inhale, whoosh;
@@ -15,6 +15,18 @@ namespace TwoOfUs.Player.Audio
         
         private new AudioSource audio;
         private float initialVolume;
+        
+        public GameObject GameObject
+        {
+            get { return gameObject; }
+        }
+
+        public Creator Creator { get; private set; }
+
+        public void Init(Creator creator)
+        {
+            Creator = creator;
+        }
 
         public void Stop()
         {

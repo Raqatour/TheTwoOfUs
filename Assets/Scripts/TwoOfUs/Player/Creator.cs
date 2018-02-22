@@ -1,5 +1,6 @@
 ﻿using System;
 using Flusk.Utility;
+using LaunchGamePadHelper;
 using TwoOfUs.Management;
 using TwoOfUs.Player.Audio;
 using TwoOfUs.Player.Peripheral;
@@ -8,20 +9,30 @@ using UnityEngine.SceneManagement;
 
 namespace TwoOfUs.Player
 {
-	public abstract class Creator : TwoOfUsBehaviour
+	public class Creator : TwoOfUsBehaviour
 	{
+		// Oh, look! It's an enum.
+		public enum PlayerHalf
+		{
+			Orga,
+			
+			Mecha
+		}
+
 		//TODO: make this an enum
 		[SerializeField]
-		protected int gender;
-		public int Gender
+		protected PlayerHalf player;
+		public PlayerHalf Player
 		{
-			get { return gender; }
+			get { return player; }
 		}
+		
+		public event Action<bool> GlowingChanged;
 		
 		public GameObject soulMate;
 	
 		// The Creator of the soul mate
-		protected Creator SoulMate { get; set; }
+		public Creator SoulMate { get; private set; }
 
 		public Rigidbody Rigidbody { get; private set; }
 		public float speed = 10.0f;
@@ -45,7 +56,10 @@ namespace TwoOfUs.Player
 
 		private bool isIgnited;
 
-		public virtual bool IsGlowing { get; set; }
+		public bool IsSqueezeTimerRunning
+		{
+			get { return SqueezeTimer != null && SqueezeTimer.IsRunning; }
+		}
 
 		// Ignited data
 		public event Action<bool> IgnitedChanged;
@@ -73,13 +87,9 @@ namespace TwoOfUs.Player
 
 		[SerializeField]
 		protected float squeezeTime = 5.0f;
-		public float timerSqueeze0;
-		public float timerSqueeze1 = 0.0f;
 
 		public Timer SqueezeTimer { get; protected set; }
 
-		public GamePadController.Controller gamePad1;
-		public GamePadController.Controller gamePad2;
 
 		private Vector3 originalScale;
 
@@ -91,6 +101,28 @@ namespace TwoOfUs.Player
 		public float TotalScale
 		{
 			get { return Scale * orbit.Scale; }
+		}
+
+		public bool inhaled = true;
+		public bool isBig;
+		[SerializeField]
+		protected bool isGlowing = true;
+		
+		public bool IsGlowing
+		{
+			get { return isGlowing; }
+			set
+			{
+				if (isGlowing == value)
+				{
+					return;
+				}
+				if (GlowingChanged != null)
+				{
+					GlowingChanged(value);
+				}
+				isGlowing = value;
+			}
 		}
 
 		// TODO: store using the struct SizeRange
@@ -108,6 +140,7 @@ namespace TwoOfUs.Player
 
 #if UNITY_EDITOR
 		public KeyCode forceIgnite;
+		
 #endif
 
 		public void AssignGamepad(GamePadController.Controller controller)
@@ -141,6 +174,9 @@ namespace TwoOfUs.Player
 		{
 			SoundFx = GetComponentInChildren<SoundEffectController>();
 			orbit = GetComponentInChildren<Orbit>();
+			var light = GetComponent<Light>();
+			orbit.Init(this, light);
+
 		}
 
 		protected virtual void Start()
@@ -152,10 +188,9 @@ namespace TwoOfUs.Player
 			}
 			
 			levelManager.GetController(this);
-			
-			gamePad1 = GamePadController.GamePadOne;
-			gamePad2 = GamePadController.GamePadTwo;
-
+			SoulMate = levelManager.GetOtherHalf(player);
+			soulMate = SoulMate.gameObject;
+		
 			originalScale = transform.localScale;
 		
 			Rigidbody = GetComponent<Rigidbody>();
@@ -192,6 +227,76 @@ namespace TwoOfUs.Player
 				soulMate.transform.localPosition = new Vector3(-20, 0, 0);
 				transform.localPosition = new Vector3(20, 0, 0);
 			}
+			else
+			{
+				if (Ammo == 1)
+				{
+					SetScale(minimumSize);
+				}
+				else if (Ammo == 6)
+				{
+					SetScale(maxSize);
+				}
+				else if (Ammo == 3)
+				{
+					SetScale(mediumSize);
+				}
+
+				Rigidbody.velocity = GamepadController.LeftStick.GetVector3() * speed;
+
+				// Collider size change
+				if (Input.GetKey(anotherCharacterInhaleKey) || GamepadController.RightTrigger == 1 && GamepadController.B.Held)
+				{
+					if (!IsSqueezeTimerRunning)
+					{
+						SqueezeTimer = new Timer(squeezeTime, OnTimerComplete);
+						SqueezeTimer.Update = OnTimerUpdate;
+					}
+                
+					SqueezeTimer.Tick(Time.deltaTime);
+
+					if (!IsIgnited && IsSqueezeTimerRunning && IsGlowing )
+					{
+						isBig = true;
+					}
+                
+					//TODO: This is probably going to run waaaaay tooo often
+					if (isBig && IsSqueezeTimerRunning)
+					{
+						SoulMate.Ammo = 1;
+						Ammo = 6;
+						SoundFx.Exhale();
+					}
+				}
+
+				// Creator is big and player let go
+				if (isBig && GamepadController.RightTrigger == 0)
+				{
+					isGlowing = isBig = false;
+				}
+
+				if (Input.GetKeyUp(anotherCharacterInhaleKey) || GamepadController.RightTrigger == 0 || !IsSqueezeTimerRunning)
+				{
+					soulMate.GetComponent<Creator>().Ammo = 3;
+					Ammo = 3;
+				}
+            
+				GamePadeCheck();
+			}
+		}
+		
+		private void OnTimerComplete()
+		{
+			if (!inhaled)
+			{
+				return;
+			}
+			SoundFx.Stop();
+			SoundFx.Inhale();
+			inhaled = false;
+            
+			GamepadController.StopVibration();
+            
 		}
 
 		protected void SetScale(float size)
@@ -201,7 +306,7 @@ namespace TwoOfUs.Player
 
 		private void GamePadCheck()
 		{			
-			if (gamePad1.A.Pressed || gamePad2.A.Pressed)
+			if (GamepadController.A.Pressed)
 			{
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 			}
@@ -231,5 +336,28 @@ namespace TwoOfUs.Player
 			isEnded = true;
 			soulMate.GetComponent<Creator>().isEnded = true;
 		}
+
+		protected void GamePadeCheck()
+		{
+			if (Math.Abs(GamepadController.RightTrigger) < float.Epsilon && IsSqueezeTimerRunning )
+			{
+				ForceFinishTimer();
+			}
+			
+			if (GamepadController.X.Pressed)
+			{
+				SceneManager.LoadScene(0);
+			}
+			
+			if (Math.Abs(GamepadController.RightTrigger) < float.Epsilon)
+			{
+				GamepadController.StopVibration();
+			}
+		}
+
+		private void OnTimerUpdate(float time)
+		{
+			vibrationController.SetCurrentTime(time);
+		}	
 	}
 }

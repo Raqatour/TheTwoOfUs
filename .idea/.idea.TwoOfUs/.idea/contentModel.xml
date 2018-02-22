@@ -198,15 +198,12 @@
               <e p="Audio" t="Include">
                 <e p="SoundEffectController.cs" t="Include" />
               </e>
-              <e p="Characters" t="Include">
-                <e p="Mecha.cs" t="Include" />
-                <e p="Orga.cs" t="Include" />
-              </e>
               <e p="ControllerCreator.cs" t="Include" />
               <e p="Creator.cs" t="Include" />
               <e p="Editor" t="Include">
                 <e p="EffectCreatorEditor.cs" t="Include" />
               </e>
+              <e p="IPlayerController.cs" t="Include" />
               <e p="Peripheral" t="Include">
                 <e p="TimeVibrationController.cs" t="Include" />
               </e>

@@ -1,73 +1,83 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using TwoOfUs.Player;
-using TwoOfUs.Player.Characters;
 using UnityEngine;
 
 public class Reignite : MonoBehaviour
 {
 	bool isButtonUp;
-	public AudioSource aud;
-	public AudioClip intake;
+	
+	[SerializeField]
+	protected new AudioSource audio;
+	
+	[SerializeField]
+	protected AudioClip intake;
 
-	void Start()
+	private void Start()
 	{
-		aud = GetComponent<AudioSource>();
+		audio = GetComponent<AudioSource>();
 	}
 
-	void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider other)
 	{
 		Creator otherCreator = other.GetComponent<Creator>();
 		
 		if(other.CompareTag("Orga"))
 		{
 			isButtonUp = true;
-			otherCreator.soulMate.GetComponent<Creator>().timerSqueeze1 = 5;
-			(otherCreator as Orga).IsOrgaGlowing = true;
-			(otherCreator.soulMate.GetComponent<Creator>() as Mecha).IsMechaGlowing = true;
+			otherCreator.SoulMate.ForceFinishTimer();
+			otherCreator.IsGlowing = true;
+			otherCreator.SoulMate.IsGlowing = true;
 			otherCreator.IsIgnited = true;
 			otherCreator.soulMate.GetComponent<Creator>().IsIgnited = true;
-			if(!aud.isPlaying)
+			if(!audio.isPlaying)
 			{
-				aud.PlayOneShot(intake, 1.0f);
+				audio.PlayOneShot(intake, 1.0f);
 			}
 		}
 
-		if(other.CompareTag("Mecha"))
+		if (!other.CompareTag("Mecha"))
 		{
-			isButtonUp = true;
-			otherCreator.soulMate.GetComponent<Creator>().ForceFinishTimer();
-			(otherCreator as Mecha).IsMechaGlowing = true;
-			(otherCreator.soulMate.GetComponent<Creator>() as Orga).IsOrgaGlowing = true;
-			otherCreator.IsIgnited = true;
-			otherCreator.soulMate.GetComponent<Creator>().IsIgnited = true;
-			if(!aud.isPlaying)
-			{
-				aud.PlayOneShot(intake, 1.0f);
-			}
+			return;
+		}
+
+		isButtonUp = true;
+		otherCreator.soulMate.GetComponent<Creator>().ForceFinishTimer();
+		otherCreator.IsGlowing = true;
+		otherCreator.SoulMate.IsGlowing = true;
+		otherCreator.IsIgnited = true;
+		otherCreator.soulMate.GetComponent<Creator>().IsIgnited = true;
+		if(!audio.isPlaying)
+		{
+			audio.PlayOneShot(intake, 1.0f);
 		}
 	}
 
 	void OnTriggerStay(Collider other)
 	{
+		Creator creator = other.GetComponent<Creator>();
+		
 		if(other.CompareTag("Orga"))
 		{
-			if(other.GetComponent<Creator>().gamePad2.RightTrigger == 0 && isButtonUp)
+			if(Math.Abs(creator.SoulMate.GamepadController.RightTrigger) < float.Epsilon && isButtonUp)
 			{
-				other.GetComponent<Creator>().ForceFinishTimer(true);
-				other.GetComponent<Creator>().soulMate.GetComponent<Creator>().ForceFinishTimer(true);
+				creator.ForceFinishTimer(true);
+				creator.soulMate.GetComponent<Creator>().ForceFinishTimer(true);
 				isButtonUp = false;
 			}
 		}
 
-		if(other.CompareTag("Mecha"))
+		if (!other.CompareTag("Mecha"))
 		{
-			if(other.GetComponent<Creator>().gamePad1.RightTrigger == 0 && isButtonUp)
-			{
-				other.GetComponent<Creator>().ForceFinishTimer(true);;
-				other.GetComponent<Creator>().soulMate.GetComponent<Creator>().ForceFinishTimer(true);
-				isButtonUp = false;
-			}
+			return;
 		}
+
+		if (!(Math.Abs(creator.GamepadController.RightTrigger) < float.Epsilon) || !isButtonUp)
+		{
+			return;
+		}
+
+		creator.ForceFinishTimer(true);
+		creator.SoulMate.ForceFinishTimer(true);
+		isButtonUp = false;
 	}
 }

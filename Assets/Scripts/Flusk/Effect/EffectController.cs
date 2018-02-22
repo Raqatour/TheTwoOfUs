@@ -1,9 +1,6 @@
 ﻿using Flusk.Effect.Particles;
 using Flusk.Effect.Spheres;
-using Flusk.Extensions;
-using Flusk.Utility;
 using TwoOfUs.Player;
-using TwoOfUs.Player.Characters;
 using UnityEngine;
 
 namespace Flusk.Effect
@@ -34,31 +31,6 @@ namespace Flusk.Effect
         {
             sparkleManager.SetSparkle(state);
             innerSphereManager.SetActive(state);
-        }
-
-        protected virtual void OnEnable()
-        {
-            parentCreator = GetComponentInParent<Creator>();
-            if (parentCreator is Orga)
-            {
-                (parentCreator as Orga).OrgaGlowingChanged += Sparkle;
-            }
-            else if ( parentCreator is Mecha)
-            {
-                (parentCreator as Mecha).MechaGlowingChanged += Sparkle;
-            }
-        }
-
-        protected virtual void OnDisable()
-        {
-            if (parentCreator is Orga)
-            {
-                (parentCreator as Orga).OrgaGlowingChanged -= Sparkle;
-            }
-            else if ( parentCreator is Mecha)
-            {
-                (parentCreator as Mecha).MechaGlowingChanged -= Sparkle;
-            }
         }
     }
 }

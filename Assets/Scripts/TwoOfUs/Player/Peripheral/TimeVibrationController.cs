@@ -2,7 +2,7 @@
 
 namespace TwoOfUs.Player.Peripheral
 {
-    public class TimeVibrationController : TwoOfUsBehaviour
+    public class TimeVibrationController : TwoOfUsBehaviour, IPlayerController
     {
         [SerializeField]
         protected AnimationCurve vibrationCurve;
@@ -16,6 +16,20 @@ namespace TwoOfUs.Player.Peripheral
         private float currentTime;
 
         private GamePadController.Controller gamepad;
+        
+        public GameObject GameObject
+        {
+            get { return gameObject; }
+        }
+
+        public Creator Creator { get; private set; }
+
+        public void Init(Creator creator)
+        {
+            Creator = creator;
+        }
+
+        
 
         public void SetCurrentTime(float time)
         {
@@ -26,7 +40,7 @@ namespace TwoOfUs.Player.Peripheral
             }
             currentTime = time;
             float current = vibrationCurve.Evaluate(currentTime) * 100;
-            gamepad.SetVibration(current);
+            Creator.GamepadController.SetVibration(current);
         }
 
         public void Stop()
@@ -36,8 +50,9 @@ namespace TwoOfUs.Player.Peripheral
 
         private void Start()
         {
-            Creator creator = GetComponentInParent<Creator>();
-            gamepad = creator.GamepadController;
+            gamepad = Creator.GamepadController;
         }
+
+        
     }
 }

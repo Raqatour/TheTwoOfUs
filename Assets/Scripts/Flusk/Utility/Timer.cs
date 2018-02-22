@@ -17,6 +17,7 @@ namespace Flusk.Utility
         {
             Goal = time;
             Complete = onComplete;
+            IsRunning = true;
         }
 
         public virtual void Reset()

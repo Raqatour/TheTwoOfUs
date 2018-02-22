@@ -1,15 +1,26 @@
 ﻿using Flusk.Extensions;
 using Flusk.Utility;
 using TwoOfUs.Player;
-using TwoOfUs.Player.Characters;
 using UnityEngine;
 
 namespace Flusk.Effect
 {
-    public class TimedEffectController : EffectController
+    public class TimedEffectController : EffectController, IPlayerController
     {
         private Timer shrinkTimer;
         private Timer growTimer;
+        
+        public GameObject GameObject
+        {
+            get { return gameObject; }
+        }
+
+        public Creator Creator { get; private set; }
+
+        public void Init(Creator creator)
+        {
+            Creator = creator;
+        }
 
         public override void Sparkle(bool state)
         {
@@ -46,29 +57,20 @@ namespace Flusk.Effect
             }
         }
 
-        protected override void OnEnable()
+        protected void Start()
         {
             parentCreator = GetComponentInParent<Creator>();
-            if (parentCreator.Gender == 0)
-            {
-                (parentCreator as Orga).OrgaGlowingChanged += Sparkle;
-            }
-            else if ( parentCreator.Gender == 1)
-            {
-                (parentCreator as Mecha).MechaGlowingChanged += Sparkle;
-            }
+            parentCreator.GlowingChanged += Sparkle;
         }
 
-        protected override void OnDisable()
+        protected void OnDestroy()
         {
-            if (parentCreator is Orga)
+            parentCreator = GetComponentInParent<Creator>();
+            if (parentCreator == null)
             {
-                (parentCreator as Orga).OrgaGlowingChanged -= Sparkle;
+                return;
             }
-            else if ( parentCreator is Mecha)
-            {
-                (parentCreator as Mecha).MechaGlowingChanged -= Sparkle;
-            }
+            parentCreator.GlowingChanged -= Sparkle;
         }
 
         private void SetUpShrink()

@@ -17,9 +17,14 @@ namespace TwoOfUs.Player
             void Spawn()
         {
             int length = controllers.Length;
+
+            var creator = GetComponent<Creator>();
+            
             for (int i = 0; i < length; i++)
             {
-                Instantiate(controllers[i], transform);
+                var current = controllers[i].GetComponent<IPlayerController>();
+                var created = Instantiate(current.GameObject, transform);
+                created.GetComponent<IPlayerController>().Init(creator);
             }
         }  
         
