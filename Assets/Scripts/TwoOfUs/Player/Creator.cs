@@ -12,7 +12,6 @@ namespace TwoOfUs.Player
 {
 	public class Creator : TwoOfUsBehaviour
 	{
-		// Oh, look! It's an enum.
 		public enum PlayerHalf
 		{
 			Orga,
@@ -53,7 +52,8 @@ namespace TwoOfUs.Player
 
 		protected TimeVibrationController vibrationController;
 
-		public GamePadController.Controller GamepadController { get; private set; }
+		//public GamePadController.Controller GamepadController { get; private set; }
+		public GamepadHelper GamepadHelper { get; private set; }
 
 		private bool isIgnited;
 
@@ -126,6 +126,11 @@ namespace TwoOfUs.Player
 			}
 		}
 
+		public bool IsReady
+		{
+			get { return GamepadHelper != null; }
+		}
+
 		// TODO: store using the struct SizeRange
 		
 		[SerializeField]
@@ -146,7 +151,7 @@ namespace TwoOfUs.Player
 
 		public void AssignGamepad(GamePadController.Controller controller)
 		{
-			GamepadController = controller;
+			GamepadHelper = new GamepadHelper(controller);
 		}
 
 		public void ResetTimer()
@@ -264,10 +269,10 @@ namespace TwoOfUs.Player
 					SetScale(mediumSize);
 				}
 
-				Rigidbody.velocity = GamepadController.LeftStick.GetVector3() * speed;
+				Rigidbody.velocity = GamepadHelper.LeftStick * speed;
 
 				// Collider size change
-				if (Input.GetKey(anotherCharacterInhaleKey) || GamepadController.RightTrigger == 1 && GamepadController.B.Held)
+				if (Input.GetKey(anotherCharacterInhaleKey) || GamepadHelper.IsSqueezing)
 				{
 					if (!IsSqueezeTimerRunning)
 					{
@@ -292,12 +297,12 @@ namespace TwoOfUs.Player
 				}
 
 				// Creator is big and player let go
-				if (isBig && GamepadController.RightTrigger == 0)
+				if (isBig && GamepadHelper.IsSquezzingReleased)
 				{
 					isGlowing = isBig = false;
 				}
 
-				if (Input.GetKeyUp(anotherCharacterInhaleKey) || GamepadController.RightTrigger == 0 || !IsSqueezeTimerRunning)
+				if (Input.GetKeyUp(anotherCharacterInhaleKey) || GamepadHelper.IsSquezzingReleased || !IsSqueezeTimerRunning)
 				{
 					soulMate.GetComponent<Creator>().Ammo = 3;
 					Ammo = 3;
@@ -317,7 +322,7 @@ namespace TwoOfUs.Player
 			SoundFx.Inhale();
 			inhaled = false;
             
-			GamepadController.StopVibration();
+			GamepadHelper.StopVibration();
             
 		}
 
@@ -328,10 +333,15 @@ namespace TwoOfUs.Player
 
 		private void GamePadCheck()
 		{			
-			if (GamepadController.A.Pressed)
+			if (GamepadHelper.IsResetting)
 			{
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+				ResetScene();
 			}
+		}
+
+		private static void ResetScene()
+		{
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		}
 
 		private void OnCollisionEnter(Collision other)
@@ -345,7 +355,8 @@ namespace TwoOfUs.Player
 			GetComponent<SphereCollider>().enabled = false;
 			IsGlowing = true;
 			soulMate.GetComponent<Creator>().IsGlowing = true;
-			Instantiate(Ender, new Vector3((transform.position.x + other.transform.position.x)/2, (transform.position.y + other.transform.position.y)/2, 0), Quaternion.identity);
+			Instantiate(Ender, new Vector3((transform.position.x + other.transform.position.x)/2, 
+				(transform.position.y + other.transform.position.y)/2, 0), Quaternion.identity);
 			heart = GameObject.FindWithTag("Heart");
 			if (heart == null)
 			{
@@ -361,19 +372,19 @@ namespace TwoOfUs.Player
 
 		protected void GamePadeCheck()
 		{
-			if (Math.Abs(GamepadController.RightTrigger) < float.Epsilon && IsSqueezeTimerRunning )
+			if (GamepadHelper.IsSquezzingReleased && IsSqueezeTimerRunning )
 			{
 				ForceFinishTimer();
 			}
 			
-			if (GamepadController.X.Pressed)
+			if (GamepadHelper.IsGoingToMenu)
 			{
 				SceneManager.LoadScene(0);
 			}
 			
-			if (Math.Abs(GamepadController.RightTrigger) < float.Epsilon)
+			if (GamepadHelper.IsSquezzingReleased)
 			{
-				GamepadController.StopVibration();
+				GamepadHelper.StopVibration();
 			}
 		}
 

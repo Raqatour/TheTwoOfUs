@@ -28,21 +28,12 @@ namespace TwoOfUs.Management
         {
             get
             {
-                return orga != null && orga.GamepadController != null
-                                    && mecha != null && mecha.GamepadController != null;
+                return orga != null && orga.IsReady && mecha != null && mecha.IsReady;
             }
         }
 
         public static event Action CreatorFound;
-        
-#if UNITY_EDITOR
-        public static void Assign()
-        {
-            
-        }
-#endif
-        
-        
+                
         public void Force()
         {
             Awake();

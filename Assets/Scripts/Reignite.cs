@@ -58,7 +58,7 @@ public class Reignite : MonoBehaviour
 		
 		if(other.CompareTag("Orga"))
 		{
-			if(Math.Abs(creator.SoulMate.GamepadController.RightTrigger) < float.Epsilon && isButtonUp)
+			if(creator.SoulMate.GamepadHelper.IsSquezzingReleased && isButtonUp)
 			{
 				creator.ForceFinishTimer(true);
 				creator.soulMate.GetComponent<Creator>().ForceFinishTimer(true);
@@ -71,7 +71,7 @@ public class Reignite : MonoBehaviour
 			return;
 		}
 
-		if (!(Math.Abs(creator.GamepadController.RightTrigger) < float.Epsilon) || !isButtonUp)
+		if (!creator.GamepadHelper.IsSquezzingReleased || !isButtonUp)
 		{
 			return;
 		}

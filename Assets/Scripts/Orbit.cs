@@ -47,8 +47,8 @@ public class Orbit : MonoBehaviour
 		}
 
 		var vAndMnotPressed = !Input.GetKey(KeyCode.V) && !Input.GetKey(KeyCode.M);
-		var triggerrNotPressed = Math.Abs(Creator.GamepadController.RightTrigger) < float.Epsilon &&
-		                         Math.Abs(Creator.SoulMate.GamepadController.RightTrigger) < float.Epsilon;
+		var triggerrNotPressed = Creator.GamepadHelper.IsSquezzingReleased &&
+		                         Creator.SoulMate.GamepadHelper.IsSquezzingReleased;
 		if (!vAndMnotPressed || !triggerrNotPressed)
 		{
 			return;
@@ -68,7 +68,7 @@ public class Orbit : MonoBehaviour
 
 	private void SubGender()
 	{
-		bool squeezing = Mathf.Approximately(Creator.GamepadController.RightTrigger, 1) && Creator.GamepadController.B.Held;
+		bool squeezing = Creator.GamepadHelper.IsSqueezing;
 			
 		if (Input.GetKey(KeyCode.M) || squeezing && !Creator.IsIgnited)
 		{
@@ -82,7 +82,7 @@ public class Orbit : MonoBehaviour
 			}
 		}
 			
-		if (Creator.isBig && Mathf.Approximately(Creator.GamepadController.RightTrigger, 0) )
+		if (Creator.isBig && Creator.GamepadHelper.IsSquezzingReleased )
 		{
 			Creator.IsGlowing = false;
 			Creator.isBig = false;

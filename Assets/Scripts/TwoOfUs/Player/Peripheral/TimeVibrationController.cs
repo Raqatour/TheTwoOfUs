@@ -40,7 +40,7 @@ namespace TwoOfUs.Player.Peripheral
             }
             currentTime = time;
             float current = vibrationCurve.Evaluate(currentTime) * 100;
-            Creator.GamepadController.SetVibration(current);
+            Creator.GamepadHelper.SetVibration(current);
         }
 
         public void Stop()
@@ -50,7 +50,7 @@ namespace TwoOfUs.Player.Peripheral
 
         private void Start()
         {
-            gamepad = Creator.GamepadController;
+            gamepad = Creator.GamepadHelper.Controller;
         }
 
         
