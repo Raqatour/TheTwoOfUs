@@ -23,26 +23,22 @@ namespace TwoOfUs.Management
             get { return mecha; }
             protected set { mecha = value; }
         }
+
+        public bool IsReady
+        {
+            get
+            {
+                return orga != null && orga.GamepadController != null
+                                    && mecha != null && mecha.GamepadController != null;
+            }
+        }
+
+        public static event Action CreatorFound;
         
 #if UNITY_EDITOR
-        [InitializeOnLoadMethod]
         public static void Assign()
         {
-            //TODO: Find a more elegant solution
-            Creator[] creators = FindObjectsOfType<Creator>();
-            FindObjectOfType<LevelManager>().Force();
-            foreach (var current in creators)
-            {
-                switch (current.Player)
-                {
-                    case Creator.PlayerHalf.Orga:
-                        Instance.Orga = current;
-                        break;
-                    case Creator.PlayerHalf.Mecha:
-                        Instance.Mecha = current;
-                        break;
-                }
-            }
+            
         }
 #endif
         
@@ -77,6 +73,32 @@ namespace TwoOfUs.Management
             {
                 Mecha = creator;
                 Mecha.AssignGamepad(GamePadController.GamePadTwo);
+            }
+        }
+
+        protected virtual void OnEnable()
+        {
+            //TODO: Find a more elegant solution
+            Creator[] creators = FindObjectsOfType<Creator>();
+            foreach (var current in creators)
+            {
+                switch (current.Player)
+                {
+                    case Creator.PlayerHalf.Orga:
+                        Instance.Orga = current;
+                        if (CreatorFound != null)
+                        {
+                            CreatorFound();
+                        }
+                        break;
+                    case Creator.PlayerHalf.Mecha:
+                        Instance.Mecha = current;
+                        if (CreatorFound != null)
+                        {
+                            CreatorFound();
+                        }
+                        break;
+                }
             }
         }
     }

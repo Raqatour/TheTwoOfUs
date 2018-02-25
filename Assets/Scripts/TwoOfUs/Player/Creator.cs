@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Flusk.Utility;
 using LaunchGamePadHelper;
 using TwoOfUs.Management;
@@ -171,47 +172,68 @@ namespace TwoOfUs.Player
 		}
 		
 		protected virtual void Awake()
+		{		
+			originalScale = transform.localScale;
+			Rigidbody = GetComponent<Rigidbody>();
+		}
+
+		protected virtual void Start()
 		{
 			SoundFx = GetComponentInChildren<SoundEffectController>();
 			orbit = GetComponentInChildren<Orbit>();
 			var light = GetComponent<Light>();
 			orbit.Init(this, light);
-
+			vibrationController = GetComponentInChildren<TimeVibrationController>();
 		}
 
-		protected virtual void Start()
+		private void OnCreatorFound()
 		{
 			LevelManager levelManager;
 			if (!LevelManager.TryGetInstance(out levelManager))
 			{
 				Debug.LogError("No LevelManager in the scene");
 			}
-			
-			levelManager.GetController(this);
-			SoulMate = levelManager.GetOtherHalf(player);
-			soulMate = SoulMate.gameObject;
-		
-			originalScale = transform.localScale;
-		
-			Rigidbody = GetComponent<Rigidbody>();
 
-			vibrationController = GetComponentInChildren<TimeVibrationController>();
+			SoulMate = levelManager.GetOtherHalf(player);
+			if (SoulMate != null)
+			{
+				soulMate = SoulMate.gameObject;
+			}
+			levelManager.GetController(this);
+		}
+
+		protected virtual void OnEnable()
+		{
+			LevelManager.CreatorFound += OnCreatorFound;
+		}
+
+		protected virtual void OnDisable()
+		{
+			LevelManager.CreatorFound -= OnCreatorFound;
 		}
 
 		protected virtual void Update()
 		{
-			// Update orbits
-			orbit.UpdateOrbit();	
-			
-			GamePadCheck();
-			//Movement and collider size change
-			Movement();
-#if UNITY_EDITOR
-			if (Input.GetKeyDown(forceIgnite))
+			LevelManager lm;
+			if (!LevelManager.TryGetInstance(out lm))
 			{
-				IsIgnited = !IsIgnited;
+				return;
 			}
-#endif
+
+			if (lm.IsReady)
+			{
+				// Update orbits
+				orbit.UpdateOrbit();	
+				GamePadCheck();
+				//Movement and collider size change
+				Movement();
+#if UNITY_EDITOR
+				if (Input.GetKeyDown(forceIgnite))
+				{
+					IsIgnited = !IsIgnited;
+				}
+#endif				
+			}
 		}
 
 		protected virtual void Movement()
