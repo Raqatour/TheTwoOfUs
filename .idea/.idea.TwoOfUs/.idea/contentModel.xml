@@ -8,6 +8,13 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Final Fantasy X Transition" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="Screenshot.cs" t="Include" />
+            <e p="ShatterController.cs" t="Include" />
+            <e p="ShatteredGlass.cs" t="Include" />
+          </e>
+        </e>
         <e p="Gems Ultimate Pack" t="Include">
           <e p="Scripts" t="Include">
             <e p="AnimationScript.cs" t="Include" />
