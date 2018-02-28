@@ -8,13 +8,6 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="Final Fantasy X Transition" t="Include">
-          <e p="Scripts" t="Include">
-            <e p="Screenshot.cs" t="Include" />
-            <e p="ShatterController.cs" t="Include" />
-            <e p="ShatteredGlass.cs" t="Include" />
-          </e>
-        </e>
         <e p="Gems Ultimate Pack" t="Include">
           <e p="Scripts" t="Include">
             <e p="AnimationScript.cs" t="Include" />
@@ -51,6 +44,13 @@
             <e p="JetBrains" t="Include">
               <e p="Unity3DRider.cs" t="Include" />
             </e>
+          </e>
+        </e>
+        <e p="Reset Scene Transition" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="Screenshot.cs" t="Include" />
+            <e p="ShatterController.cs" t="Include" />
+            <e p="ShatteredGlass.cs" t="Include" />
           </e>
         </e>
         <e p="Scenes" t="Include">
@@ -161,7 +161,6 @@
           <e p="MenuControl.cs" t="Include" />
           <e p="Orbit.cs" t="Include" />
           <e p="PassageWay.cs" t="Include" />
-          <e p="Persistant.cs" t="Include" />
           <e p="PulsingZones.cs" t="Include" />
           <e p="Reignite.cs" t="Include" />
           <e p="SmallCircle.cs" t="Include" />
@@ -197,10 +196,17 @@
                 <e p="TimeTracker.cs" t="Include" />
               </e>
             </e>
+            <e p="Flow" t="Include">
+              <e p="ResetEffectController.cs" t="Include" />
+            </e>
             <e p="Management" t="Include">
+              <e p="Flow" t="Include">
+                <e p="SceneManager.cs" t="Include" />
+              </e>
               <e p="GameManager.cs" t="Include" />
               <e p="LevelManager.cs" t="Include" />
               <e p="MusicManager.cs" t="Include" />
+              <e p="ResetManager.cs" t="Include" />
             </e>
             <e p="Player" t="Include">
               <e p="Audio" t="Include">
