@@ -28,12 +28,12 @@ namespace TwoOfUs.Player
 
         public bool IsResetting
         {
-            get { return Controller.A.Held; }
+            get { return Controller.A.Released; }
         }
 
         public bool IsGoingToMenu
         {
-            get { return Controller.X.Pressed; }
+            get { return Controller.X.Released; }
         }
 
         public void SetVibration(float intensity)

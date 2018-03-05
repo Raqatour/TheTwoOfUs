@@ -15,7 +15,8 @@ namespace Reset_Scene_Transition
         [SerializeField]
         Transform GlassTrigger;
 
-    
+        [SerializeField]
+        protected Transform meshParent;
 
         // Use this for initialization
         void Start () 
@@ -73,13 +74,7 @@ namespace Reset_Scene_Transition
             {
                 _Childrens[i].StartCountForce();
             }
-            //GlassTrigger.DOLocalMoveX(4.09f, 2f);
-            Invoke("RestartScene", 5f);
         }
 
-        void RestartScene()
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
-        }
     }
 }

@@ -148,10 +148,11 @@ namespace TwoOfUs.Player
 		public KeyCode forceIgnite;
 		
 #endif
-
+		
 		public void AssignGamepad(GamePadController.Controller controller)
 		{
 			GamepadHelper = new GamepadHelper(controller);
+			GetComponentInChildren<TimeVibrationController>().Ready();
 		}
 
 		public void ResetTimer()
@@ -335,13 +336,8 @@ namespace TwoOfUs.Player
 		{			
 			if (GamepadHelper.IsResetting)
 			{
-				ResetScene();
+				ResetManager.Instance.ResetLevel();
 			}
-		}
-
-		private static void ResetScene()
-		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		}
 
 		private void OnCollisionEnter(Collision other)

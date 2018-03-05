@@ -28,16 +28,6 @@ namespace TwoOfUs
         {
             behaviour.Destroy();
         }
-        
-        public static void Destroy(GameObject behaviour)
-        {
-            TwoOfUsBehaviour b = behaviour.GetComponent<TwoOfUsBehaviour>();
-            if (b == null)
-            {
-                return;
-            }
-            b.Destroy();
-        }
 
         public T GetOrAddComponent<T>() where T : Component
         {

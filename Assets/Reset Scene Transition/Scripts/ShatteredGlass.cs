@@ -1,22 +1,50 @@
-﻿using UnityEngine;
+﻿using Flusk.Extensions;
+using Flusk.Utility;
+using UnityEngine;
 
 namespace Reset_Scene_Transition
 {
-    public class ShatteredGlass : MonoBehaviour {
+    public class ShatteredGlass : MonoBehaviour 
+    {
         public float StartTime;
         Rigidbody _Rb;
         ConstantForce _Force;
+
+        private float time = 1.3f;
+        private Timer timer;
+        private Vector3 originalScale;
 
         private void Start()
         {
             _Rb = GetComponent<Rigidbody>();
             _Force = GetComponent<ConstantForce>();
+            originalScale = transform.localScale;
+        }
+
+        protected virtual void Update()
+        {
+            if (timer != null)
+            {
+                timer.Tick(Time.deltaTime);
+            }
         }
 
         public void StartAnimate()
         {
-            //transform.DOLocalRotate(new Vector3(Random.Range(-5, 5), Random.Range(-2, 2)), 0.5f);
-            //transform.DOScale(new Vector3(transform.localScale.x * 0.98f, transform.localScale.y, transform.localScale.z * 0.98f), 0.5f);
+            timer = new Timer(time, TimerComplete);
+            timer.Update = AnimateDown;
+        }
+
+        private void AnimateDown(float currentTime)
+        {
+            float ratio = (time - currentTime) / time;
+            Vector3 scale = originalScale * ratio;
+            transform.localScale = scale;
+        }
+
+        private void TimerComplete()
+        {
+            timer = null;
         }
 
         public void StartCountForce()

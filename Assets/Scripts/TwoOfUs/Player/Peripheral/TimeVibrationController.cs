@@ -29,8 +29,6 @@ namespace TwoOfUs.Player.Peripheral
             Creator = creator;
         }
 
-        
-
         public void SetCurrentTime(float time)
         {
             if (time < 0)
@@ -48,11 +46,9 @@ namespace TwoOfUs.Player.Peripheral
             gamepad.StopVibration();
         }
 
-        private void Start()
+        public void Ready()
         {
             gamepad = Creator.GamepadHelper.Controller;
         }
-
-        
     }
 }

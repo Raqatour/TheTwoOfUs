@@ -15,8 +15,8 @@ namespace TwoOfUs.Flow
         public void Reset()
         {
             Screenshot screenShot = Resources.Load<Screenshot>(screenShotPath);
-            screenShot.TakeSnapShot();
-            
+            Screenshot created = Instantiate(screenShot);
+            created.TakeSnapShot();
             Destroy();
         }
 
