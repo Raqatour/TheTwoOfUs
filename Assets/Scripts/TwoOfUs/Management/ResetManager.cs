@@ -12,7 +12,7 @@ namespace TwoOfUs.Management
         protected ResetEffectController effectControllerTemplate;
         
         [SerializeField]
-        protected float delay = 2f;
+        protected float delay = 1.5f;
 
         private Timer timer;
 

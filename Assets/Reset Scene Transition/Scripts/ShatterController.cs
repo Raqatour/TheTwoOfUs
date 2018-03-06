@@ -16,11 +16,21 @@ namespace Reset_Scene_Transition
         Transform GlassTrigger;
 
         [SerializeField]
+        protected ParticleSystem meshParticleSystem;
+
+        [SerializeField]
         protected Transform meshParent;
 
         // Use this for initialization
         void Start () 
         {
+            // some grossness
+
+            foreach (Transform trans in meshParent)
+            {
+                Instantiate(meshParticleSystem, trans);
+            }
+            
             Init();
         
         }

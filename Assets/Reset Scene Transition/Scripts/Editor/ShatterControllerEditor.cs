@@ -9,6 +9,7 @@ namespace Reset_Scene_Transition.Editor
     {
         protected SerializedProperty meshParent;
         protected SerializedProperty sceneMaterial;
+        protected SerializedProperty particles;
 
         protected ShatterController controller;
 
@@ -50,6 +51,7 @@ namespace Reset_Scene_Transition.Editor
         {
             meshParent = serializedObject.FindProperty("meshParent");
             sceneMaterial = serializedObject.FindProperty("ScreenshotMaterial");
+            particles = serializedObject.FindProperty("meshParticleSystem");
             controller = (ShatterController) target;
         }
     }
